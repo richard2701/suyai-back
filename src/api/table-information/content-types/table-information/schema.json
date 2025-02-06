@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "table_informations",
+  "info": {
+    "singularName": "table-information",
+    "pluralName": "table-informations",
+    "displayName": "Table Information",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "head": {
+      "type": "json"
+    },
+    "body": {
+      "type": "json"
+    },
+    "transfer_view": {
+      "type": "string"
+    }
+  }
+}

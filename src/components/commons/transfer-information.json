@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_commons_transfer_informations",
+  "info": {
+    "displayName": "TransferInformation",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "table_information": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::table-information.table-information"
+    }
+  }
+}

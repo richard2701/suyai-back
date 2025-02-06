@@ -1,0 +1,36 @@
+{
+  "kind": "singleType",
+  "collectionName": "transfers",
+  "info": {
+    "singularName": "transfer",
+    "pluralName": "transfers",
+    "displayName": "Transfer",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "hero": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utils.hero"
+    },
+    "infoData": {
+      "type": "component",
+      "repeatable": false,
+      "component": "commons.transfer-information"
+    },
+    "form_reservation": {
+      "type": "component",
+      "repeatable": false,
+      "component": "commons.form-section"
+    },
+    "sectionRecommended": {
+      "type": "component",
+      "repeatable": false,
+      "component": "commons.section-cards-recommended"
+    }
+  }
+}

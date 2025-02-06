@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_commons_section_cards_recommendeds",
+  "info": {
+    "displayName": "SectionCardsRecommended",
+    "icon": "gate",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "articles": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::article.article"
+    },
+    "button": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utils.button"
+    }
+  }
+}

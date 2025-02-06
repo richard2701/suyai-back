@@ -1,0 +1,29 @@
+{
+  "collectionName": "components_commons_icon_section_banners",
+  "info": {
+    "displayName": "IconSectionBanner",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "richtext",
+      "required": true
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "minLength": 40
+    },
+    "button": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utils.button"
+    },
+    "iconsInfo": {
+      "type": "component",
+      "repeatable": true,
+      "component": "utils.icon-info"
+    }
+  }
+}

@@ -12,15 +12,18 @@
     "strapi": "strapi"
   },
   "dependencies": {
+    "@_sh/strapi-plugin-ckeditor": "^4.0.11",
     "@strapi/plugin-cloud": "5.4.1",
     "@strapi/plugin-users-permissions": "5.4.1",
     "@strapi/strapi": "5.4.1",
+    "@tabler/icons-react": "^3.29.0",
     "fs-extra": "^10.0.0",
     "mime-types": "^2.1.27",
     "pg": "8.8.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
+    "strapi-plugin-documentation": "^3.6.11",
     "styled-components": "^6.0.0"
   },
   "devDependencies": {

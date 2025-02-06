@@ -1,0 +1,12 @@
+{
+  "collectionName": "components_utils_tests",
+  "info": {
+    "displayName": "test"
+  },
+  "options": {},
+  "attributes": {
+    "body2": {
+      "type": "json"
+    }
+  }
+}

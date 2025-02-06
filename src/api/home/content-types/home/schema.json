@@ -1,0 +1,55 @@
+{
+  "kind": "singleType",
+  "collectionName": "homes",
+  "info": {
+    "singularName": "home",
+    "pluralName": "homes",
+    "displayName": "Home",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "servicesIcon": {
+      "displayName": "IconSectionBanner",
+      "type": "component",
+      "repeatable": false,
+      "component": "commons.icon-section-banner"
+    },
+    "cards": {
+      "type": "component",
+      "repeatable": false,
+      "component": "commons.grid-cards"
+    },
+    "contactForm": {
+      "type": "component",
+      "repeatable": false,
+      "component": "commons.form-section"
+    },
+    "footer": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utils.footer"
+    },
+    "aboutUs": {
+      "type": "component",
+      "repeatable": false,
+      "component": "commons.about-section"
+    },
+    "hero": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utils.hero"
+    },
+    "termas": {
+      "type": "component",
+      "repeatable": false,
+      "component": "commons.grid-cards"
+    }
+  }
+}

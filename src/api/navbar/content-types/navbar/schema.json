@@ -1,0 +1,37 @@
+{
+  "kind": "singleType",
+  "collectionName": "navbars",
+  "info": {
+    "singularName": "navbar",
+    "pluralName": "navbars",
+    "displayName": "Navbar",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "links": {
+      "displayName": "link",
+      "type": "component",
+      "repeatable": true,
+      "component": "utils.link"
+    },
+    "social": {
+      "type": "component",
+      "repeatable": true,
+      "component": "utils.link"
+    },
+    "logo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utils.menu-button"
+    },
+    "button": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utils.button"
+    }
+  }
+}
