@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_utils_article_services",
+  "info": {
+    "displayName": "ArticleServices",
+    "icon": "attachment"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "richtext"
+    }
+  }
+}

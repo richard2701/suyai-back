@@ -15,10 +15,6 @@
     "title": {
       "type": "string"
     },
-    "description": {
-      "type": "text",
-      "maxLength": 80
-    },
     "slug": {
       "type": "uid",
       "targetField": "title"
@@ -62,6 +58,38 @@
     },
     "capacity": {
       "type": "string"
+    },
+    "hero": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utils.hero"
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    },
+    "sectionRecommended": {
+      "type": "component",
+      "repeatable": false,
+      "component": "commons.section-cards-recommended"
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "services": {
+      "type": "component",
+      "repeatable": true,
+      "component": "utils.article-services"
+    },
+    "pickup": {
+      "type": "string",
+      "required": false
+    },
+    "form_reservation": {
+      "type": "component",
+      "repeatable": false,
+      "component": "commons.form-section"
     }
   }
 }
