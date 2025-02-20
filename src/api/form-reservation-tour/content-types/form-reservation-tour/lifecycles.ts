@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 export default {
-  async afterCreate(event) {
+  async afterCreate(event) { 
     const { result } = event;
 
     // Prevent duplicate execution using a flag

@@ -11,7 +11,6 @@ export default [
   {
     name: 'strapi::cors',
     config: {
-      enabled: true,
       origin: process.env.NODE_ENV === 'development'
         ? ['https://studio.apollographql.com', 'http://localhost:1337'] // Development origins
         : ['https://your-production-frontend.com'],
