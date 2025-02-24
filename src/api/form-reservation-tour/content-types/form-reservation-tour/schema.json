@@ -1,0 +1,53 @@
+{
+  "kind": "collectionType",
+  "collectionName": "form_reservation_tours",
+  "info": {
+    "singularName": "form-reservation-tour",
+    "pluralName": "form-reservation-tours",
+    "displayName": "form reservation tour",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "emailSent": {
+      "type": "boolean",
+      "default": false
+    },
+    "phone": {
+      "type": "text"
+    },
+    "message": {
+      "type": "text",
+      "maxLength": 400
+    },
+    "tourDate": {
+      "type": "date"
+    },
+    "tourName": {
+      "type": "string"
+    },
+    "lastname": {
+      "type": "string"
+    },
+    "tourId": {
+      "type": "string"
+    },
+    "people": {
+      "type": "integer"
+    },
+    "article": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::article.article"
+    }
+  }
+}

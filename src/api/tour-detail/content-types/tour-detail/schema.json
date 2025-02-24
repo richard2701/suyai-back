@@ -1,10 +1,10 @@
 {
   "kind": "singleType",
-  "collectionName": "tours",
+  "collectionName": "tour_details",
   "info": {
-    "singularName": "tour",
-    "pluralName": "tours",
-    "displayName": "Tour",
+    "singularName": "tour-detail",
+    "pluralName": "tour-details",
+    "displayName": "Tour Detail",
     "description": ""
   },
   "options": {
@@ -12,20 +12,23 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "title": {
+      "type": "string"
+    },
     "hero": {
       "type": "component",
       "repeatable": false,
       "component": "utils.hero"
     },
-    "cards": {
-      "type": "component",
-      "repeatable": false,
-      "component": "commons.grid-cards"
-    },
     "seo": {
       "type": "component",
       "repeatable": false,
       "component": "shared.seo"
+    },
+    "form_reservation": {
+      "type": "component",
+      "repeatable": false,
+      "component": "commons.form-section"
     }
   }
 }

@@ -151,6 +151,18 @@ export interface SharedSlider extends Struct.ComponentSchema {
   };
 }
 
+export interface UtilsArticleServices extends Struct.ComponentSchema {
+  collectionName: 'components_utils_article_services';
+  info: {
+    displayName: 'ArticleServices';
+    icon: 'attachment';
+  };
+  attributes: {
+    description: Schema.Attribute.RichText;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface UtilsButton extends Struct.ComponentSchema {
   collectionName: 'components_utils_buttons';
   info: {
@@ -187,7 +199,7 @@ export interface UtilsHero extends Struct.ComponentSchema {
     image: Schema.Attribute.Media<'images' | 'files' | 'videos'> &
       Schema.Attribute.Required;
     size: Schema.Attribute.String & Schema.Attribute.DefaultTo<'big'>;
-    title: Schema.Attribute.String & Schema.Attribute.Required;
+    title: Schema.Attribute.String;
   };
 }
 
@@ -255,6 +267,7 @@ declare module '@strapi/strapi' {
       'shared.rich-text': SharedRichText;
       'shared.seo': SharedSeo;
       'shared.slider': SharedSlider;
+      'utils.article-services': UtilsArticleServices;
       'utils.button': UtilsButton;
       'utils.footer': UtilsFooter;
       'utils.hero': UtilsHero;

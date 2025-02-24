@@ -1,0 +1,43 @@
+{
+  "kind": "singleType",
+  "collectionName": "forms",
+  "info": {
+    "singularName": "form",
+    "pluralName": "forms",
+    "displayName": "form_tour",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "message": {
+      "type": "text",
+      "maxLength": 400
+    },
+    "lastname": {
+      "type": "text"
+    },
+    "email": {
+      "type": "email"
+    },
+    "phone": {
+      "type": "text"
+    },
+    "date": {
+      "type": "datetime"
+    },
+    "type": {
+      "type": "string"
+    },
+    "article": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::article.article"
+    }
+  }
+}
