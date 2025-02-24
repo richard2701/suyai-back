@@ -24,6 +24,16 @@
       "type": "component",
       "repeatable": true,
       "component": "utils.icon-info"
+    },
+    "image": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": false
     }
   }
 }

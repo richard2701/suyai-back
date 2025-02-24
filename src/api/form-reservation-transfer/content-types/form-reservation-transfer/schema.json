@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "form_reservation_transfers",
+  "info": {
+    "singularName": "form-reservation-transfer",
+    "pluralName": "form-reservation-transfers",
+    "displayName": "Form reservation transfer"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email"
+    },
+    "emailSent": {
+      "type": "boolean",
+      "default": false
+    },
+    "phone": {
+      "type": "text"
+    },
+    "message": {
+      "type": "text",
+      "maxLength": 400
+    },
+    "transferDate": {
+      "type": "date"
+    },
+    "lastname": {
+      "type": "string"
+    },
+    "people": {
+      "type": "integer"
+    }
+  }
+}
