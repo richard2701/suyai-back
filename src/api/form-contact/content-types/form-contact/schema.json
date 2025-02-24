@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "form_contacts",
+  "info": {
+    "singularName": "form-contact",
+    "pluralName": "form-contacts",
+    "displayName": "form contact"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "lastname": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "phone": {
+      "type": "string",
+      "required": true
+    },
+    "message": {
+      "type": "text",
+      "maxLength": 500
+    },
+    "emailSent": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

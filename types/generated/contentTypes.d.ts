@@ -514,6 +514,42 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiFormContactFormContact extends Struct.CollectionTypeSchema {
+  collectionName: 'form_contacts';
+  info: {
+    displayName: 'form contact';
+    pluralName: 'form-contacts';
+    singularName: 'form-contact';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.Email & Schema.Attribute.Required;
+    emailSent: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    lastname: Schema.Attribute.String & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::form-contact.form-contact'
+    > &
+      Schema.Attribute.Private;
+    message: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 500;
+      }>;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    phone: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiFormReservationTourFormReservationTour
   extends Struct.CollectionTypeSchema {
   collectionName: 'form_reservation_tours';
@@ -551,6 +587,45 @@ export interface ApiFormReservationTourFormReservationTour
     tourDate: Schema.Attribute.Date;
     tourId: Schema.Attribute.String;
     tourName: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiFormReservationTransferFormReservationTransfer
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'form_reservation_transfers';
+  info: {
+    displayName: 'Form reservation transfer';
+    pluralName: 'form-reservation-transfers';
+    singularName: 'form-reservation-transfer';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.Email;
+    emailSent: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    lastname: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::form-reservation-transfer.form-reservation-transfer'
+    > &
+      Schema.Attribute.Private;
+    message: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 400;
+      }>;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    people: Schema.Attribute.Integer;
+    phone: Schema.Attribute.Text;
+    publishedAt: Schema.Attribute.DateTime;
+    transferDate: Schema.Attribute.Date;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1335,7 +1410,9 @@ declare module '@strapi/strapi' {
       'api::author.author': ApiAuthorAuthor;
       'api::category.category': ApiCategoryCategory;
       'api::footer.footer': ApiFooterFooter;
+      'api::form-contact.form-contact': ApiFormContactFormContact;
       'api::form-reservation-tour.form-reservation-tour': ApiFormReservationTourFormReservationTour;
+      'api::form-reservation-transfer.form-reservation-transfer': ApiFormReservationTransferFormReservationTransfer;
       'api::form.form': ApiFormForm;
       'api::global.global': ApiGlobalGlobal;
       'api::home.home': ApiHomeHome;
