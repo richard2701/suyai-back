@@ -25,7 +25,7 @@ export default [
       contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-          'script-src': ['https://cdn.ckeditor.com', "apollo-server-landing-page.cdn.apollographql.com"],
+          'script-src': ["'self'", 'https://cdn.ckeditor.com', "apollo-server-landing-page.cdn.apollographql.com"],
           'connect-src': ['https://proxy-event.ckeditor.com', 'https://studio.apollographql.com', "'self'", "https:", "apollo-server-landing-page.cdn.apollographql.com"],
           "img-src": ["'self'", "data:", "blob:", "apollo-server-landing-page.cdn.apollographql.com"],
           "style-src": ["'self'", "'unsafe-inline'", "apollo-server-landing-page.cdn.apollographql.com"],
