@@ -13,7 +13,7 @@ export default [
     config: {
       origin: process.env.NODE_ENV === 'development'
         ? ['https://studio.apollographql.com', 'http://localhost:1337'] // Development origins
-        : ['https://your-production-frontend.com'],
+        : [process.env.FRONTEND_URL],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
       headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
       keepHeaderOnError: true,
@@ -25,11 +25,12 @@ export default [
       contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-          'script-src': ["'self'", 'https://cdn.ckeditor.com', "apollo-server-landing-page.cdn.apollographql.com"],
-          'connect-src': ['https://proxy-event.ckeditor.com', 'https://studio.apollographql.com', "'self'", "https:", "apollo-server-landing-page.cdn.apollographql.com"],
-          "img-src": ["'self'", "data:", "blob:", "apollo-server-landing-page.cdn.apollographql.com"],
-          "style-src": ["'self'", "'unsafe-inline'", "apollo-server-landing-page.cdn.apollographql.com"],
-          "frame-src": ["sandbox.embed.apollographql.com"]
+          'script-src': ["'self'", 'https://cdn.ckeditor.com', process.env.APOLLO_CDN ? process.env.APOLLO_CDN : ""].filter(Boolean),
+          'connect-src': ['https://proxy-event.ckeditor.com', 'https://studio.apollographql.com', "'self'", "https:", process.env.APOLLO_CDN ? process.env.APOLLO_CDN : ""].filter(Boolean),
+          "img-src": ["'self'", "data:", "blob:", process.env.APOLLO_CDN ? process.env.APOLLO_CDN : ""].filter(Boolean),
+          "style-src": ["'self'", process.env.APOLLO_CDN ? process.env.APOLLO_CDN : ""].filter(Boolean),
+          "frame-src": ["sandbox.embed.apollographql.com"],
+          "upgrade-insecure-requests": [],
         },
       },
     },
