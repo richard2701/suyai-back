@@ -30,7 +30,6 @@ export default [
           "img-src": ["'self'", "data:", "blob:", process.env.APOLLO_CDN ? process.env.APOLLO_CDN : ""].filter(Boolean),
           "style-src": ["'self'", process.env.APOLLO_CDN ? process.env.APOLLO_CDN : ""].filter(Boolean),
           "frame-src": ["sandbox.embed.apollographql.com"],
-          "upgrade-insecure-requests": [],
         },
       },
     },
