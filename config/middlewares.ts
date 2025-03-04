@@ -25,11 +25,11 @@ export default [
       contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-          'script-src': ["'self'", 'https://cdn.ckeditor.com', process.env.APOLLO_CDN ? process.env.APOLLO_CDN : ""].filter(Boolean),
-          'connect-src': ['https://proxy-event.ckeditor.com', 'https://studio.apollographql.com', "'self'", "https:", process.env.APOLLO_CDN ? process.env.APOLLO_CDN : ""].filter(Boolean),
-          "img-src": ["'self'", "data:", "blob:", process.env.APOLLO_CDN ? process.env.APOLLO_CDN : ""].filter(Boolean),
-          "style-src": ["'self'", process.env.APOLLO_CDN ? process.env.APOLLO_CDN : ""].filter(Boolean),
-          "frame-src": ["sandbox.embed.apollographql.com"],
+          "connect-src": ["'self'", "https:", "apollo-server-landing-page.cdn.apollographql.com"],
+          "img-src": ["'self'", "data:", "blob:", "apollo-server-landing-page.cdn.apollographql.com"],
+          "script-src": ["'self'", "'unsafe-inline'", "apollo-server-landing-page.cdn.apollographql.com"],
+          "style-src": ["'self'", "'unsafe-inline'", "apollo-server-landing-page.cdn.apollographql.com"],
+          "frame-src": ["sandbox.embed.apollographql.com"]
         },
       },
     },
