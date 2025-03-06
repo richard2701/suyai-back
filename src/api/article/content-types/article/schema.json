@@ -74,9 +74,6 @@
       "repeatable": false,
       "component": "commons.section-cards-recommended"
     },
-    "description": {
-      "type": "richtext"
-    },
     "services": {
       "type": "component",
       "repeatable": true,
@@ -90,6 +87,10 @@
       "type": "component",
       "repeatable": false,
       "component": "commons.form-section"
+    },
+    "description": {
+      "type": "richtext",
+      "required": true
     }
   }
 }
