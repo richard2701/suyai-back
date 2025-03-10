@@ -17,6 +17,24 @@ export default ({ env }) => ({
       maxLimit: 500
     },
   },
+  upload: {
+    config: {
+      provider: 'cloudinary',
+      providerOptions: {
+        cloud_name: env('CLOUDINARY_NAME'),
+        api_key: env('CLOUDINARY_KEY'),
+        api_secret: env('CLOUDINARY_SECRET'),
+        folder: env('CLOUDINARY_FOLDER'),
+      },
+      actionOptions: {
+        uploadStream: {
+          folder: env('CLOUDINARY_FOLDER'), // Ensure this matches the folder name you want
+        },
+        upload: {},
+        delete: {},
+      },
+    },
+  },
   email: {
     config: {
       provider: 'nodemailer',

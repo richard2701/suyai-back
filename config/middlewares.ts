@@ -26,9 +26,16 @@ export default [
         useDefaults: true,
         directives: {
           "connect-src": ["'self'", "https:", "apollo-server-landing-page.cdn.apollographql.com"],
-          "img-src": ["'self'", "data:", "blob:", "apollo-server-landing-page.cdn.apollographql.com"],
+          "img-src": ["'self'", "data:", "blob:", "apollo-server-landing-page.cdn.apollographql.com", "market-assets.strapi.io", "res.cloudinary.com"],
           "script-src": ["'self'", "'unsafe-inline'", "apollo-server-landing-page.cdn.apollographql.com"],
           "style-src": ["'self'", "'unsafe-inline'", "apollo-server-landing-page.cdn.apollographql.com"],
+          'media-src': [
+            "'self'",
+            'data:',
+            'blob:',
+            'market-assets.strapi.io',
+            'res.cloudinary.com',
+          ],
           "frame-src": ["sandbox.embed.apollographql.com"]
         },
       },
