@@ -721,6 +721,7 @@ export interface ApiHomeHome extends Struct.SingleTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     footer: Schema.Attribute.Component<'utils.footer', false>;
+    form_reservation: Schema.Attribute.Component<'commons.form-section', false>;
     hero: Schema.Attribute.Component<'utils.hero', false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::home.home'> &
