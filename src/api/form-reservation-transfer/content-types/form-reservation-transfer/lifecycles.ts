@@ -24,7 +24,7 @@ export default {
         // Send the email
         await strapi.plugins['email'].services.email.send({
           to: result.email,
-          from: 'noreply@mainstylis.com',
+          from: 'richar33333@gmail.com',
           subject: 'Reservacion Transfer',
           html: emailTemplate,
         });

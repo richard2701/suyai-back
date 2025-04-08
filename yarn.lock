@@ -2025,6 +2025,29 @@
     argparse "~1.0.9"
     string-argv "~0.3.1"
 
+"@sendgrid/client@^8.1.3":
+  version "8.1.5"
+  resolved "https://registry.yarnpkg.com/@sendgrid/client/-/client-8.1.5.tgz#e6586c1ea02ec587b393c1f2a63d9eec8c94e34d"
+  integrity sha512-Jqt8aAuGIpWGa15ZorTWI46q9gbaIdQFA21HIPQQl60rCjzAko75l3D1z7EyjFrNr4MfQ0StusivWh8Rjh10Cg==
+  dependencies:
+    "@sendgrid/helpers" "^8.0.0"
+    axios "^1.8.2"
+
+"@sendgrid/helpers@^8.0.0":
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/@sendgrid/helpers/-/helpers-8.0.0.tgz#f74bf9743bacafe4c8573be46166130c604c0fc1"
+  integrity sha512-Ze7WuW2Xzy5GT5WRx+yEv89fsg/pgy3T1E3FS0QEx0/VvRmigMZ5qyVGhJz4SxomegDkzXv/i0aFPpHKN8qdAA==
+  dependencies:
+    deepmerge "^4.2.2"
+
+"@sendgrid/mail@8.1.3":
+  version "8.1.3"
+  resolved "https://registry.yarnpkg.com/@sendgrid/mail/-/mail-8.1.3.tgz#d371cbddcd2e8ca9469a68d1ed0c6b3a5c365e5e"
+  integrity sha512-Wg5iKSUOER83/cfY6rbPa+o3ChnYzWwv1OcsR8gCV8SKi+sUPIMroildimlnb72DBkQxcbylxng1W7f0RIX7MQ==
+  dependencies:
+    "@sendgrid/client" "^8.1.3"
+    "@sendgrid/helpers" "^8.0.0"
+
 "@simov/deep-extend@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@simov/deep-extend/-/deep-extend-1.0.0.tgz#dff17d38305614e296eb80bf4898b9d10b061325"
@@ -2572,13 +2595,13 @@
     url-join "4.0.1"
     yup "0.32.9"
 
-"@strapi/provider-email-nodemailer@^5.9.0":
-  version "5.10.4"
-  resolved "https://registry.yarnpkg.com/@strapi/provider-email-nodemailer/-/provider-email-nodemailer-5.10.4.tgz#27c9ecf57aacbb18b1a02bd339712335272252be"
-  integrity sha512-8OfX3Rb7v8uRX3QfA4FAmgBBAjRBRjMk7S/nFwodWZNNPvOL9t5nSysHPiX5hR6pRM95M8qOA1bu/3DD1jBWSg==
+"@strapi/provider-email-sendgrid@^5.12.3":
+  version "5.12.3"
+  resolved "https://registry.yarnpkg.com/@strapi/provider-email-sendgrid/-/provider-email-sendgrid-5.12.3.tgz#c18768dab17f963efb7bcbf93052e23b909cb07f"
+  integrity sha512-P1CWb4De5GXXX6BykgaVJd6AYowaYpB4joLckZ24ZJMRz7zKF6o72PJsjtup8mn0hPKSfQoQnJNOdlByQx8FQQ==
   dependencies:
-    lodash "4.17.21"
-    nodemailer "6.9.1"
+    "@sendgrid/mail" "8.1.3"
+    "@strapi/utils" "5.12.3"
 
 "@strapi/provider-email-sendmail@5.10.4":
   version "5.10.4"
@@ -2853,6 +2876,22 @@
   version "5.11.0"
   resolved "https://registry.yarnpkg.com/@strapi/utils/-/utils-5.11.0.tgz#f00d2d06c964881464908c3676cd088ebfc9614d"
   integrity sha512-AVoCS5Ffb/YJVxKProKe+pJnrqr2N7VyH5KQPSmHkA4d4RW/xPVIhQJMtdNjMpGZJrX/jluocARq8GZujtAQWw==
+  dependencies:
+    "@sindresorhus/slugify" "1.1.0"
+    date-fns "2.30.0"
+    execa "5.1.1"
+    http-errors "2.0.0"
+    lodash "4.17.21"
+    node-machine-id "1.1.12"
+    p-map "4.0.0"
+    preferred-pm "3.1.2"
+    yup "0.32.9"
+    zod "^3.22.4"
+
+"@strapi/utils@5.12.3":
+  version "5.12.3"
+  resolved "https://registry.yarnpkg.com/@strapi/utils/-/utils-5.12.3.tgz#46ae12b2626d61d1cd388a179ffc4777f92e5eaa"
+  integrity sha512-Lo36TB7A1yQDqPb9w2UTiKvAhHUwkrXcbw7ZpymzmudnoOWn93Z0WQkV9Cqj76L6lQcGUUNMOAEzl79i26CMgw==
   dependencies:
     "@sindresorhus/slugify" "1.1.0"
     date-fns "2.30.0"
@@ -3909,6 +3948,15 @@ axios@1.7.4:
   version "1.7.4"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.4.tgz#4c8ded1b43683c8dd362973c393f3ede24052aa2"
   integrity sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==
+  dependencies:
+    follow-redirects "^1.15.6"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
+
+axios@^1.8.2:
+  version "1.8.4"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.8.4.tgz#78990bb4bc63d2cae072952d374835950a82f447"
+  integrity sha512-eBSYY4Y68NNlHbHBMdeDmKNtDgXWhQsJcGqzO3iLUM0GraQFSS9cVgPX5I9b3lbdFKyYoAEGAZF1DwhTaljNAw==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.0"
@@ -8182,11 +8230,6 @@ nodemailer-shared@1.1.0:
   integrity sha512-68xW5LSyPWv8R0GLm6veAvm7E+XFXkVgvE3FW0FGxNMMZqMkPFeGDVALfR1DPdSfcoO36PnW7q5AAOgFImEZGg==
   dependencies:
     nodemailer-fetch "1.6.0"
-
-nodemailer@6.9.1:
-  version "6.9.1"
-  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-6.9.1.tgz#8249d928a43ed85fec17b13d2870c8f758a126ed"
-  integrity sha512-qHw7dOiU5UKNnQpXktdgQ1d3OFgRAekuvbJLcdG5dnEo/GtcTHRYM7+UfJARdOFU9WUQO8OiIamgWPmiSFHYAA==
 
 nodemon@3.0.2:
   version "3.0.2"
