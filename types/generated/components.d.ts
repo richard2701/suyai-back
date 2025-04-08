@@ -54,7 +54,7 @@ export interface CommonsIconSectionBanner extends Struct.ComponentSchema {
     iconsInfo: Schema.Attribute.Component<'utils.icon-info', true>;
     image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'> &
       Schema.Attribute.Required;
-    title: Schema.Attribute.RichText & Schema.Attribute.Required;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 

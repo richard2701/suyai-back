@@ -6,10 +6,6 @@
   },
   "options": {},
   "attributes": {
-    "title": {
-      "type": "richtext",
-      "required": true
-    },
     "description": {
       "type": "string",
       "required": true,
@@ -35,6 +31,10 @@
         "videos",
         "audios"
       ]
+    },
+    "title": {
+      "type": "string",
+      "required": true
     }
   }
 }
