@@ -37,19 +37,13 @@ export default ({ env }) => ({
   },
   email: {
     config: {
-      provider: 'nodemailer',
+      provider: 'sendgrid', // For community providers pass the full package name (e.g. provider: 'strapi-provider-email-mandrill')
       providerOptions: {
-        host: env('SMTP_HOST', 'smtp.example.com'),
-        port: env('SMTP_PORT', 587),
-        auth: {
-          user: env('SMTP_USERNAME'),
-          pass: env('SMTP_PASSWORD'),
-        },
-        // ... any custom nodemailer options
+        apiKey: env('SMTP_APIKEY'),
       },
       settings: {
-        defaultFrom: 'hello@example.com',
-        defaultReplyTo: 'hello@example.com',
+        defaultFrom: env('SMTP_EMAIL'),
+        defaultReplyTo: env('SMTP_EMAIL'),
       },
     },
   },

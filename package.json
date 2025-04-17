@@ -17,7 +17,7 @@
     "@strapi/plugin-graphql": "^5.9.0",
     "@strapi/plugin-seo": "^2.0.8",
     "@strapi/plugin-users-permissions": "5.4.1",
-    "@strapi/provider-email-nodemailer": "^5.9.0",
+    "@strapi/provider-email-sendgrid": "^5.12.3",
     "@strapi/provider-upload-cloudinary": "^5.11.0",
     "@strapi/strapi": "^5.10.2",
     "@tabler/icons-react": "^3.29.0",
