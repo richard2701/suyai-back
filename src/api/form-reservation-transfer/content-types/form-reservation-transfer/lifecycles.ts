@@ -26,7 +26,7 @@ export default {
           .replace('{{ copyYear }}', new Date().getFullYear().toString())
 
         // Replace placeholders with actual data
-        emailTemplate = emailTemplate
+        emailTemplateCopy = emailTemplate
           .replace('{{ name }}', result.name)
           .replace('{{ lastname }}', result.lastname)
           .replace('{{ email }}', result.email)
