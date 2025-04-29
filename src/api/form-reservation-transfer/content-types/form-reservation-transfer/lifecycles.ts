@@ -13,6 +13,7 @@ export default {
         const templatePathCopy = path.resolve(__dirname, '../../../../../../config/email/templates/reservation_transfer_copy.html');
         let emailTemplate = fs.readFileSync(templatePath, 'utf-8');
         let emailTemplateCopy = fs.readFileSync(templatePathCopy, 'utf-8');
+
         // Replace placeholders with actual data
         emailTemplate = emailTemplate
           .replace('{{ name }}', result.name)
@@ -23,6 +24,18 @@ export default {
           .replace('{{ transferDate }}', result.transferDate)
           .replace('{{ people }}', result.people)
           .replace('{{ copyYear }}', new Date().getFullYear().toString())
+
+        // Replace placeholders with actual data
+        emailTemplate = emailTemplate
+          .replace('{{ name }}', result.name)
+          .replace('{{ lastname }}', result.lastname)
+          .replace('{{ email }}', result.email)
+          .replace('{{ phone }}', result.phone)
+          .replace('{{ message }}', result.message)
+          .replace('{{ transferDate }}', result.transferDate)
+          .replace('{{ people }}', result.people)
+          .replace('{{ copyYear }}', new Date().getFullYear().toString())
+
 
         // Send the email
         await strapi.plugins['email'].services.email.send({
