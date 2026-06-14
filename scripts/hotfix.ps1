@@ -55,10 +55,17 @@ function Get-WorktreePath([string]$n) {
   Join-Path $ParentDir "$ProjectName-hotfix-$n"
 }
 
+# git is a native exe: $ErrorActionPreference='Stop' does NOT trap its failures,
+# so check $LASTEXITCODE explicitly after each call.
+function Invoke-Git {
+  git -C $RepoRoot @args
+  if ($LASTEXITCODE -ne 0) { throw "git $($args -join ' ') failed (exit $LASTEXITCODE)" }
+}
+
 switch ($Command) {
 
   'list' {
-    git -C $RepoRoot worktree list
+    Invoke-Git worktree list
     break
   }
 
@@ -71,23 +78,25 @@ switch ($Command) {
     if (Test-Path $wt) { throw "Worktree path already exists: $wt" }
 
     Write-Host "==> Fetching origin..." -ForegroundColor Cyan
-    git -C $RepoRoot fetch origin --quiet
+    Invoke-Git fetch origin --quiet
 
     Write-Host "==> Creating worktree $wt on $branch (from $Base)" -ForegroundColor Cyan
-    git -C $RepoRoot worktree add -b $branch $wt $Base
+    Invoke-Git worktree add -b $branch $wt $Base
 
     # .env (gitignored) -> copy + override PORT for side-by-side running
     $srcEnv = Join-Path $RepoRoot '.env'
     $dstEnv = Join-Path $wt '.env'
     if (Test-Path $srcEnv) {
       Write-Host "==> Copying .env and setting PORT=$Port" -ForegroundColor Cyan
-      $env = Get-Content $srcEnv
-      if ($env -match '^\s*PORT=') {
-        $env = $env -replace '^\s*PORT=.*', "PORT=$Port"
+      $envLines = Get-Content $srcEnv
+      if ($envLines -match '^\s*PORT=') {
+        $envLines = $envLines -replace '^\s*PORT=.*', "PORT=$Port"
       } else {
-        $env += "PORT=$Port"
+        $envLines += "PORT=$Port"
       }
-      Set-Content -Path $dstEnv -Value $env -Encoding UTF8
+      # WriteAllLines with a no-BOM encoding: Set-Content -Encoding UTF8 emits a
+      # BOM under Windows PowerShell 5.1, which can corrupt the first .env key.
+      [System.IO.File]::WriteAllLines($dstEnv, $envLines, (New-Object System.Text.UTF8Encoding $false))
     } else {
       Write-Warning ".env not found in main repo — worktree has no env file."
     }
@@ -133,8 +142,8 @@ switch ($Command) {
     }
 
     Write-Host "==> Removing worktree $wt (branch hotfix/$Name kept)" -ForegroundColor Cyan
-    git -C $RepoRoot worktree remove $wt --force
-    git -C $RepoRoot worktree prune
+    Invoke-Git worktree remove $wt --force
+    Invoke-Git worktree prune
 
     Write-Host "Done. Branch hotfix/$Name still exists for its PR." -ForegroundColor Green
     break
