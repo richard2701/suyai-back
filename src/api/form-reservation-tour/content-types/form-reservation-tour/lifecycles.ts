@@ -31,7 +31,6 @@ export default {
           message: result.message,
           tourDate: result.tourDate,
           people: result.people,
-          article: result.article,
           copyYear: new Date().getFullYear().toString(),
         });
 

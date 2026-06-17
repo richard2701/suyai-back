@@ -9,6 +9,11 @@ const HTML_ESCAPE_MAP: Record<string, string> = {
 /**
  * HTML-escape an arbitrary value so it cannot break out of text or attribute
  * context when injected into an email template. Nullish values render as ''.
+ *
+ * NOTE: This escapes markup only — it does NOT neutralize dangerous URL schemes.
+ * If a template ever interpolates user input into an `href`/`src` (e.g.
+ * `href="{{ link }}"`), attribute-escaping will not stop a `javascript:` payload;
+ * validate/allowlist the scheme separately before substituting.
  */
 export const escapeHtml = (value: unknown): string =>
   String(value ?? '').replace(/[&<>"']/g, (char) => HTML_ESCAPE_MAP[char]);
