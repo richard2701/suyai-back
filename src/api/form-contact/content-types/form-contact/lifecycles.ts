@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { env } from 'process';
+import { renderTemplate } from '../../../../utils/render-template';
 export default {
   async afterCreate(event) {
     const { result } = event;
@@ -14,23 +15,17 @@ export default {
         let emailTemplate = fs.readFileSync(templatePath, 'utf-8');
         let emailTemplateCopy = fs.readFileSync(templatePathCopy, 'utf-8');
 
-        // Replace placeholders with actual data
-        emailTemplate = emailTemplate
-          .replace('{{ name }}', result.name)
-          .replace('{{ lastname }}', result.lastname)
-          .replace('{{ email }}', result.email)
-          .replace('{{ phone }}', result.phone)
-          .replace('{{ message }}', result.message)
-          .replace('{{ copyYear }}', new Date().getFullYear().toString())
-
-        // Replace placeholders with actual data
-        emailTemplateCopy = emailTemplateCopy
-          .replace('{{ name }}', result.name)
-          .replace('{{ lastname }}', result.lastname)
-          .replace('{{ email }}', result.email)
-          .replace('{{ phone }}', result.phone)
-          .replace('{{ message }}', result.message)
-          .replace('{{ copyYear }}', new Date().getFullYear().toString())
+        // Replace placeholders with HTML-escaped data
+        const templateVars = {
+          name: result.name,
+          lastname: result.lastname,
+          email: result.email,
+          phone: result.phone,
+          message: result.message,
+          copyYear: new Date().getFullYear().toString(),
+        };
+        emailTemplate = renderTemplate(emailTemplate, templateVars);
+        emailTemplateCopy = renderTemplate(emailTemplateCopy, templateVars);
 
         // Send the email
         await strapi.plugins['email'].services.email.send({
