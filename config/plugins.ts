@@ -37,13 +37,19 @@ export default ({ env }) => ({
   },
   email: {
     config: {
-      provider: 'sendgrid', // For community providers pass the full package name (e.g. provider: 'strapi-provider-email-mandrill')
+      provider: 'nodemailer',
       providerOptions: {
-        apiKey: env('SMTP_APIKEY'),
+        host: env('SMTP_HOST', 'smtp.resend.com'),
+        port: env.int('SMTP_PORT', 465),
+        secure: env.bool('SMTP_SECURE', true),
+        auth: {
+          user: env('SMTP_USERNAME', 'resend'),
+          pass: env('RESEND_API_KEY'),
+        },
       },
       settings: {
-        defaultFrom: env('SMTP_EMAIL'),
-        defaultReplyTo: env('SMTP_EMAIL'),
+        defaultFrom: env('SMTP_FROM'),
+        defaultReplyTo: env('SMTP_FROM'),
       },
     },
   },
