@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { env } from 'process';
+import { renderTemplate } from '../../../../utils/render-template';
 export default {
   async afterCreate(event) {
     const { result } = event;
@@ -21,18 +22,18 @@ export default {
         } else {
           tourNameChange = result.tourName
         }
-        // Replace placeholders with actual data
-        emailTemplate = emailTemplate
-          .replace('{{ name }}', result.name)
-          .replace('{{ lastname }}', result.lastname)
-          .replace('{{ tourName }}', tourNameChange)
-          .replace('{{ email }}', result.email)
-          .replace('{{ phone }}', result.phone)
-          .replace('{{ message }}', result.message)
-          .replace('{{ tourDate }}', result.tourDate)
-          .replace('{{ people }}', result.people)
-          .replace('{{ article }}', result.article)
-          .replace('{{ copyYear }}', new Date().getFullYear().toString())
+        // Replace placeholders with HTML-escaped data
+        emailTemplate = renderTemplate(emailTemplate, {
+          name: result.name,
+          lastname: result.lastname,
+          tourName: tourNameChange,
+          email: result.email,
+          phone: result.phone,
+          message: result.message,
+          tourDate: result.tourDate,
+          people: result.people,
+          copyYear: new Date().getFullYear().toString(),
+        });
 
         // Send the email
         await strapi.plugins['email'].services.email.send({
