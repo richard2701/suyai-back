@@ -44,6 +44,15 @@ export default {
           html: emailTemplate,
         });
 
+        // Send copy email to admin
+        await strapi.plugins['email'].services.email.send({
+          to: env.SMTP_EMAIL_ADMIN,
+          from: env.SMTP_FROM,
+          replyTo: result.email,
+          subject: 'Reservación de Tour Copía',
+          html: emailTemplate,
+        });
+
         // Update the record to mark email as sent
         // Mark email as sent
         // Use `strapi.db.query` instead of `entityService.update`
