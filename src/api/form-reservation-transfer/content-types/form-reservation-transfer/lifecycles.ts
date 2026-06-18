@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { env } from 'process';
 import { renderTemplate } from '../../../../utils/render-template';
+import { sendEmail } from '../../../../utils/send-email';
 export default {
   async afterCreate(event) {
     const { result } = event;
@@ -31,7 +32,7 @@ export default {
 
 
         // Send the email
-        await strapi.plugins['email'].services.email.send({
+        await sendEmail({
           to: result.email,
           from: env.SMTP_FROM,
           replyTo: env.SMTP_EMAIL_ADMIN,
@@ -40,7 +41,7 @@ export default {
         });
 
         // Send copy email
-        await strapi.plugins['email'].services.email.send({
+        await sendEmail({
           to: env.SMTP_EMAIL_ADMIN,
           from: env.SMTP_FROM,
           replyTo: result.email,
