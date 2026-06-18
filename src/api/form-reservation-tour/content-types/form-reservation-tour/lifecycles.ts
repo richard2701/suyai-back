@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { env } from 'process';
 import { renderTemplate } from '../../../../utils/render-template';
 export default {
   async afterCreate(event) {
@@ -37,8 +38,9 @@ export default {
         // Send the email
         await strapi.plugins['email'].services.email.send({
           to: result.email,
-          from: 'noreply@mainstylis.com',
-          subject: 'The Strapi Email plugin worked successfully',
+          from: env.SMTP_FROM,
+          replyTo: env.SMTP_EMAIL_ADMIN,
+          subject: 'Reservación de Tour recibida',
           html: emailTemplate,
         });
 

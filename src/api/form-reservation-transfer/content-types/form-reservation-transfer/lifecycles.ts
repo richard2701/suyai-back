@@ -33,7 +33,8 @@ export default {
         // Send the email
         await strapi.plugins['email'].services.email.send({
           to: result.email,
-          from: env.SMTP_EMAIL_ADMIN,
+          from: env.SMTP_FROM,
+          replyTo: env.SMTP_EMAIL_ADMIN,
           subject: 'Reservacion Transfer',
           html: emailTemplate,
         });
@@ -41,7 +42,8 @@ export default {
         // Send copy email
         await strapi.plugins['email'].services.email.send({
           to: env.SMTP_EMAIL_ADMIN,
-          from: env.SMTP_EMAIL_ADMIN,
+          from: env.SMTP_FROM,
+          replyTo: result.email,
           subject: 'Reservacion Transfer Copía',
           html: emailTemplateCopy,
         });
