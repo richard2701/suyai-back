@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "feature_flag_tokens",
+  "info": {
+    "singularName": "feature-flag-token",
+    "pluralName": "feature-flag-tokens",
+    "displayName": "Feature Flag Token"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "content-type-builder": {
+      "visible": true
+    }
+  },
+  "attributes": {
+    "token": {
+      "type": "string",
+      "unique": true,
+      "required": true
+    },
+    "expiresAt": {
+      "type": "datetime",
+      "required": true
+    },
+    "label": {
+      "type": "string"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

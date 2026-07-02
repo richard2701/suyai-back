@@ -132,3 +132,7 @@ dist
 build
 .strapi-updater.json
 .strapi-cloud.json
+# worktree-local (never commit)
+KICKOFF.md
+.claude/skills/
+.claude/agents/

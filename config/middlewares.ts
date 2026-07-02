@@ -12,7 +12,7 @@ export default [
     name: 'strapi::cors',
     config: {
       origin: process.env.NODE_ENV === 'development'
-        ? ['https://studio.apollographql.com', 'http://localhost:1337'] // Development origins
+        ? '*' // Local dev: allow any origin (Vite ports vary, Apollo Studio, etc.)
         : [process.env.FRONTEND_URL],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
       headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],

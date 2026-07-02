@@ -1,6 +1,16 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy init: Resend's constructor throws without an API key, which would
+// crash Strapi at boot in environments (local dev) that never send email.
+let resend: Resend | undefined;
+
+const getResend = (): Resend => {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error('Missing RESEND_API_KEY: cannot send email.');
+  }
+  resend ??= new Resend(process.env.RESEND_API_KEY);
+  return resend;
+};
 
 interface SendEmailOptions {
   to: string;
@@ -25,7 +35,7 @@ export const sendEmail = async (options: SendEmailOptions): Promise<void> => {
     throw new Error('Missing sender address: set SMTP_FROM or pass `from`.');
   }
 
-  const { error } = await resend.emails.send({
+  const { error } = await getResend().emails.send({
     from,
     to,
     replyTo,
