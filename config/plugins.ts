@@ -56,4 +56,8 @@ export default ({ env }) => ({
   seo: {
     enabled: true,
   },
+  'feature-flags': {
+    enabled: true,
+    resolve: './src/plugins/feature-flags',
+  },
 });

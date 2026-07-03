@@ -131,9 +131,12 @@ exports
 dist
 build
 .strapi-updater.json
-.strapi-cloud.jsonKICKOFF.md
+.strapi-cloud.json
 
-# worktree kickoff brief — never commit
+# worktree-local (never commit)
 KICKOFF.md
+.claude/skills/
+.claude/agents/
+
 # bun artifact (repo uses yarn)
 bun.lockb

@@ -1,0 +1,11 @@
+{
+  "name": "feature-flags",
+  "version": "0.0.0",
+  "description": "Feature flag preview-token management for the Suyai admin panel.",
+  "strapi": {
+    "kind": "plugin",
+    "name": "feature-flags",
+    "displayName": "Feature Flags",
+    "description": "Feature flag preview-token management for the Suyai admin panel."
+  }
+}
