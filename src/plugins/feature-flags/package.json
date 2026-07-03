@@ -5,6 +5,7 @@
   "strapi": {
     "kind": "plugin",
     "name": "feature-flags",
-    "displayName": "Feature Flags"
+    "displayName": "Feature Flags",
+    "description": "Feature flag preview-token management for the Suyai admin panel."
   }
 }

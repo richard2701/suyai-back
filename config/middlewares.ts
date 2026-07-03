@@ -1,3 +1,13 @@
+// Dev-only: the Vite frontend's port varies (5173/5174/5175...) depending on
+// what else is running locally, so a fixed allowlist entry breaks every time
+// it changes. Echoes back the request Origin (required by @koa/cors — see
+// node_modules/@koa/cors) only when it's http(s)://localhost:<port> or
+// http(s)://127.0.0.1:<port>; returns falsy otherwise, which makes @koa/cors
+// skip the CORS headers entirely (request gets blocked, same as not being on
+// the allowlist). Never used in production — see the ternary below.
+const isLocalDevOrigin = (origin: string | undefined): boolean =>
+  !!origin && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+
 export default [
   'strapi::logger',
   'strapi::errors',
@@ -12,7 +22,12 @@ export default [
     name: 'strapi::cors',
     config: {
       origin: process.env.NODE_ENV === 'development'
-        ? '*' // Local dev: allow any origin (Vite ports vary, Apollo Studio, etc.)
+        ? (ctx) => {
+            const requestOrigin = ctx.get('Origin');
+            return isLocalDevOrigin(requestOrigin) || requestOrigin === 'https://studio.apollographql.com'
+              ? requestOrigin
+              : false;
+          }
         : [process.env.FRONTEND_URL],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
       headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
