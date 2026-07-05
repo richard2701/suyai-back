@@ -8,6 +8,17 @@
 const isLocalDevOrigin = (origin: string | undefined): boolean =>
   !!origin && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
 
+// Production allowlist: FRONTEND_URL is a comma-separated list of exact origins.
+// Entries are trimmed and blanks dropped, so an unset/empty FRONTEND_URL yields
+// [] → @koa/cors returns no Access-Control-Allow-Origin for any request (fails
+// closed), never a wildcard. Because this is an array of specific origins, an
+// unlisted origin is rejected outright and credentials are never paired with '*'.
+// Keep in sync with config/env/production/middlewares.ts.
+const productionOrigins = (process.env.FRONTEND_URL ?? '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 export default [
   'strapi::logger',
   'strapi::errors',
@@ -28,7 +39,7 @@ export default [
               ? requestOrigin
               : false;
           }
-        : [process.env.FRONTEND_URL],
+        : productionOrigins,
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
       headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
       keepHeaderOnError: true,
