@@ -687,6 +687,7 @@ export interface ApiFormReservationTransferFormReservationTransfer
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    destination: Schema.Attribute.String & Schema.Attribute.Required;
     email: Schema.Attribute.Email;
     emailSent: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     lastname: Schema.Attribute.String;
@@ -703,6 +704,7 @@ export interface ApiFormReservationTransferFormReservationTransfer
     name: Schema.Attribute.String & Schema.Attribute.Required;
     people: Schema.Attribute.Integer;
     phone: Schema.Attribute.Text;
+    pickupTime: Schema.Attribute.Time & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     transferDate: Schema.Attribute.Date;
     updatedAt: Schema.Attribute.DateTime;

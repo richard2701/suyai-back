@@ -25,6 +25,8 @@ export default {
           message: result.message,
           transferDate: result.transferDate,
           people: result.people,
+          destination: result.destination,
+          pickupTime: result.pickupTime,
           copyYear: new Date().getFullYear().toString(),
         };
         emailTemplate = renderTemplate(emailTemplate, templateVars);
