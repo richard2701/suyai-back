@@ -31,7 +31,7 @@ export default {
                 throw new Error('reCAPTCHA inválido.');
               }
 
-              const requiredFields = ['name', 'lastname', 'email', 'phone', 'transferDate', 'people'];
+              const requiredFields = ['name', 'lastname', 'email', 'phone', 'transferDate', 'people', 'destination', 'pickupTime'];
               for (const field of requiredFields) {
                 if (!formData[field]) {
                   throw new Error(`El campo ${field} es requerido.`);
