@@ -1,0 +1,43 @@
+{
+  "kind": "singleType",
+  "collectionName": "magic_banners",
+  "info": {
+    "singularName": "magic-banner",
+    "pluralName": "magic-banners",
+    "displayName": "MagicBanner",
+    "description": "Home page promo banner (\"Conoce la magia del sur\")"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "primaryButton": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utils.button"
+    },
+    "secondaryButton": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utils.button"
+    }
+  }
+}
