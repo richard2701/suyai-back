@@ -55,11 +55,12 @@ async function seedTestimonials() {
     }
 
     await strapi.documents('api::testimonial.testimonial').create({
-      data: {
-        ...testimonial,
-        // Publish immediately so Public find/findOne returns the entry.
-        publishedAt: new Date(),
-      },
+      data: testimonial,
+      // Strapi 5's Document Service publishes via `status`, not by setting
+      // `publishedAt` in `data` (that field is ignored on create) — without
+      // this the entry is created as a draft and Public find/findOne never
+      // returns it.
+      status: 'published',
     });
     console.log(`Seeded: ${testimonial.authorName}`);
   }
