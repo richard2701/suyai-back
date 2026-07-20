@@ -29,9 +29,44 @@
       "repeatable": false,
       "component": "utils.button"
     },
+    "secondaryButton": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utils.button"
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
     "size": {
       "type": "string",
       "default": "big"
+    },
+    "badge": {
+      "type": "string"
+    },
+    "trustBullets": {
+      "type": "component",
+      "repeatable": true,
+      "component": "utils.link"
+    },
+    "rating": {
+      "type": "decimal"
+    },
+    "travelerCount": {
+      "type": "integer"
+    },
+    "avatars": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
     }
   }
 }
