@@ -785,7 +785,7 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
 export interface ApiHomeHome extends Struct.SingleTypeSchema {
   collectionName: 'homes';
   info: {
-    description: '';
+    description: 'Home single type. DEPRECATED fields (suyai-back#25, kept until FE migration then removed): `cards` -> replaced by the `destinations` relation; `contactForm` -> replaced by the `footer` single type contact fields consumed by the FE contact section (villa-tour#59); `footer` component -> redundant with the `footer` single type.';
     displayName: 'Home';
     pluralName: 'homes';
     singularName: 'home';
@@ -819,6 +819,10 @@ export interface ApiHomeHome extends Struct.SingleTypeSchema {
       false
     >;
     termas: Schema.Attribute.Component<'commons.grid-cards', false>;
+    testimonials: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::testimonial.testimonial'
+    >;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1005,12 +1009,14 @@ export interface ApiTestimonialTestimonial extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::testimonial.testimonial'
     > &
       Schema.Attribute.Private;
+    order: Schema.Attribute.Integer;
     photo: Schema.Attribute.Media<'images'>;
     publishedAt: Schema.Attribute.DateTime;
     rating: Schema.Attribute.Decimal;

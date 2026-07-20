@@ -29,6 +29,19 @@
       "repeatable": false,
       "component": "utils.button"
     },
+    "secondaryButton": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utils.button"
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
     "size": {
       "type": "string",
       "default": "big"

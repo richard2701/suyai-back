@@ -33,6 +33,13 @@
       "allowedTypes": [
         "images"
       ]
+    },
+    "order": {
+      "type": "integer"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

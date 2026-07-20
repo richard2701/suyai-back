@@ -228,9 +228,11 @@ export interface UtilsHero extends Struct.ComponentSchema {
     badge: Schema.Attribute.String;
     button: Schema.Attribute.Component<'utils.button', false>;
     description: Schema.Attribute.String;
+    gallery: Schema.Attribute.Media<'images', true>;
     image: Schema.Attribute.Media<'images' | 'files' | 'videos'> &
       Schema.Attribute.Required;
     rating: Schema.Attribute.Decimal;
+    secondaryButton: Schema.Attribute.Component<'utils.button', false>;
     size: Schema.Attribute.String & Schema.Attribute.DefaultTo<'big'>;
     title: Schema.Attribute.String;
     travelerCount: Schema.Attribute.Integer;
@@ -247,6 +249,7 @@ export interface UtilsIconInfo extends Struct.ComponentSchema {
     description: Schema.Attribute.String;
     icon: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     title: Schema.Attribute.String;
+    url: Schema.Attribute.String;
   };
 }
 
