@@ -22,8 +22,12 @@ export async function validateRecaptcha(token: string, userAction: string) {
       })
     })
 
-    const data: { riskAnalysis?: { score: number }, tokenProperties?: { valid: boolean } } = await response.json();
-    return data.riskAnalysis?.score >= 0.5 && data.tokenProperties?.valid;
+    const data: { riskAnalysis?: { score: number }, tokenProperties?: { valid: boolean, action?: string } } = await response.json();
+    return (
+      data.riskAnalysis?.score >= 0.5 &&
+      data.tokenProperties?.valid === true &&
+      data.tokenProperties?.action === userAction
+    );
   } catch (error) {
     console.error('Error validando reCAPTCHA:', error);
     return false

@@ -26,7 +26,7 @@ export default {
               if (!recaptchaToken) {
                 throw new Error('reCAPTCHA token is required');
               }
-              const isValid = await validateRecaptcha(recaptchaToken, 'tourReservation');
+              const isValid = await validateRecaptcha(recaptchaToken, 'transfer_reservation');
               if (!isValid) {
                 throw new Error('reCAPTCHA inválido.');
               }
