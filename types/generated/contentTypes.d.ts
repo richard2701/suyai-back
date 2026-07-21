@@ -583,6 +583,7 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
       'api::footer.footer'
     > &
       Schema.Attribute.Private;
+    officeLocation: Schema.Attribute.String;
     privacy: Schema.Attribute.Component<'utils.link', false>;
     publishedAt: Schema.Attribute.DateTime;
     social: Schema.Attribute.Component<'utils.link', true>;
@@ -687,6 +688,7 @@ export interface ApiFormReservationTransferFormReservationTransfer
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    destination: Schema.Attribute.String & Schema.Attribute.Required;
     email: Schema.Attribute.Email;
     emailSent: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     lastname: Schema.Attribute.String;
@@ -703,6 +705,7 @@ export interface ApiFormReservationTransferFormReservationTransfer
     name: Schema.Attribute.String & Schema.Attribute.Required;
     people: Schema.Attribute.Integer;
     phone: Schema.Attribute.Text;
+    pickupTime: Schema.Attribute.Time & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     transferDate: Schema.Attribute.Date;
     updatedAt: Schema.Attribute.DateTime;
@@ -782,7 +785,7 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
 export interface ApiHomeHome extends Struct.SingleTypeSchema {
   collectionName: 'homes';
   info: {
-    description: '';
+    description: 'Home single type. DEPRECATED fields (suyai-back#25, kept until FE migration then removed): `cards` -> replaced by the `destinations` relation; `contactForm` -> replaced by the `footer` single type contact fields consumed by the FE contact section (villa-tour#59); `footer` component -> redundant with the `footer` single type.';
     displayName: 'Home';
     pluralName: 'homes';
     singularName: 'home';
@@ -808,12 +811,52 @@ export interface ApiHomeHome extends Struct.SingleTypeSchema {
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::home.home'> &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    reviewsSubtitle: Schema.Attribute.String;
+    reviewsTitle: Schema.Attribute.String;
     seo: Schema.Attribute.Component<'shared.seo', false>;
     servicesIcon: Schema.Attribute.Component<
       'commons.icon-section-banner',
       false
     >;
     termas: Schema.Attribute.Component<'commons.grid-cards', false>;
+    testimonials: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::testimonial.testimonial'
+    >;
+    title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiMagicBannerMagicBanner extends Struct.SingleTypeSchema {
+  collectionName: 'magic_banners';
+  info: {
+    description: 'Home page promo banner ("Conoce la magia del sur")';
+    displayName: 'MagicBanner';
+    pluralName: 'magic-banners';
+    singularName: 'magic-banner';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    eyebrow: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::magic-banner.magic-banner'
+    > &
+      Schema.Attribute.Private;
+    primaryButton: Schema.Attribute.Component<'utils.button', false>;
+    publishedAt: Schema.Attribute.DateTime;
+    secondaryButton: Schema.Attribute.Component<'utils.button', false>;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -943,6 +986,41 @@ export interface ApiTermTerm extends Struct.SingleTypeSchema {
       Schema.Attribute.Required;
     subtitle: Schema.Attribute.String;
     title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiTestimonialTestimonial extends Struct.CollectionTypeSchema {
+  collectionName: 'testimonials';
+  info: {
+    description: 'Customer reviews shown on the Home page';
+    displayName: 'Testimonial';
+    pluralName: 'testimonials';
+    singularName: 'testimonial';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    authorName: Schema.Attribute.String & Schema.Attribute.Required;
+    authorRole: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::testimonial.testimonial'
+    > &
+      Schema.Attribute.Private;
+    order: Schema.Attribute.Integer;
+    photo: Schema.Attribute.Media<'images'>;
+    publishedAt: Schema.Attribute.DateTime;
+    rating: Schema.Attribute.Decimal;
+    text: Schema.Attribute.Text & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1566,10 +1644,12 @@ declare module '@strapi/strapi' {
       'api::form.form': ApiFormForm;
       'api::global.global': ApiGlobalGlobal;
       'api::home.home': ApiHomeHome;
+      'api::magic-banner.magic-banner': ApiMagicBannerMagicBanner;
       'api::navbar.navbar': ApiNavbarNavbar;
       'api::privacy.privacy': ApiPrivacyPrivacy;
       'api::table-information.table-information': ApiTableInformationTableInformation;
       'api::term.term': ApiTermTerm;
+      'api::testimonial.testimonial': ApiTestimonialTestimonial;
       'api::tour-detail.tour-detail': ApiTourDetailTourDetail;
       'api::tour.tour': ApiTourTour;
       'api::transfer.transfer': ApiTransferTransfer;

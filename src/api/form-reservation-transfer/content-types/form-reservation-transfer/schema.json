@@ -36,6 +36,14 @@
     },
     "people": {
       "type": "integer"
+    },
+    "destination": {
+      "type": "string",
+      "required": true
+    },
+    "pickupTime": {
+      "type": "time",
+      "required": true
     }
   }
 }

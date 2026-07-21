@@ -9,8 +9,10 @@ export interface CommonsAboutSection extends Struct.ComponentSchema {
   attributes: {
     description: Schema.Attribute.Text;
     images: Schema.Attribute.Media<'images' | 'files' | 'videos', true>;
+    stats: Schema.Attribute.Component<'commons.stat-item', true>;
     subtitle: Schema.Attribute.Text;
     title: Schema.Attribute.String;
+    yearsInBusiness: Schema.Attribute.Integer;
   };
 }
 
@@ -71,6 +73,18 @@ export interface CommonsSectionCardsRecommended extends Struct.ComponentSchema {
     description: Schema.Attribute.String;
     title: Schema.Attribute.String;
     url: Schema.Attribute.String;
+  };
+}
+
+export interface CommonsStatItem extends Struct.ComponentSchema {
+  collectionName: 'components_commons_stat_items';
+  info: {
+    description: '';
+    displayName: 'StatItem';
+  };
+  attributes: {
+    label: Schema.Attribute.String;
+    sub: Schema.Attribute.String;
   };
 }
 
@@ -210,12 +224,19 @@ export interface UtilsHero extends Struct.ComponentSchema {
     icon: 'bold';
   };
   attributes: {
+    avatars: Schema.Attribute.Media<'images', true>;
+    badge: Schema.Attribute.String;
     button: Schema.Attribute.Component<'utils.button', false>;
     description: Schema.Attribute.String;
+    gallery: Schema.Attribute.Media<'images', true>;
     image: Schema.Attribute.Media<'images' | 'files' | 'videos'> &
       Schema.Attribute.Required;
+    rating: Schema.Attribute.Decimal;
+    secondaryButton: Schema.Attribute.Component<'utils.button', false>;
     size: Schema.Attribute.String & Schema.Attribute.DefaultTo<'big'>;
     title: Schema.Attribute.String;
+    travelerCount: Schema.Attribute.Integer;
+    trustBullets: Schema.Attribute.Component<'utils.link', true>;
   };
 }
 
@@ -228,6 +249,7 @@ export interface UtilsIconInfo extends Struct.ComponentSchema {
     description: Schema.Attribute.String;
     icon: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     title: Schema.Attribute.String;
+    url: Schema.Attribute.String;
   };
 }
 
@@ -277,6 +299,7 @@ declare module '@strapi/strapi' {
       'commons.grid-cards': CommonsGridCards;
       'commons.icon-section-banner': CommonsIconSectionBanner;
       'commons.section-cards-recommended': CommonsSectionCardsRecommended;
+      'commons.stat-item': CommonsStatItem;
       'commons.transfer-information': CommonsTransferInformation;
       'shared.media': SharedMedia;
       'shared.quote': SharedQuote;

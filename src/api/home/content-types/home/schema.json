@@ -5,7 +5,7 @@
     "singularName": "home",
     "pluralName": "homes",
     "displayName": "Home",
-    "description": ""
+    "description": "Home single type. DEPRECATED fields (suyai-back#25, kept until FE migration then removed): `cards` -> replaced by the `destinations` relation; `contactForm` -> replaced by the `footer` single type contact fields consumed by the FE contact section (villa-tour#59); `footer` component -> redundant with the `footer` single type."
   },
   "options": {
     "draftAndPublish": true
@@ -24,12 +24,14 @@
     "cards": {
       "type": "component",
       "repeatable": false,
-      "component": "commons.grid-cards"
+      "component": "commons.grid-cards",
+      "description": "DEPRECATED (suyai-back#25): wrong model for home tiles. Replaced by the `destinations` relation. Kept until FE migration, then remove."
     },
     "contactForm": {
       "type": "component",
       "repeatable": false,
-      "component": "commons.form-section"
+      "component": "commons.form-section",
+      "description": "DEPRECATED (suyai-back#25): replaced by the `footer` single type contact fields consumed by the FE contact section (villa-tour#59). Dedicated contactSection component intentionally not built (suyai-back#22). Kept until FE migration, then remove."
     },
     "form_reservation": {
       "type": "component",
@@ -39,7 +41,8 @@
     "footer": {
       "type": "component",
       "repeatable": false,
-      "component": "utils.footer"
+      "component": "utils.footer",
+      "description": "DEPRECATED (suyai-back#25): redundant with the `footer` single type. Kept until FE migration, then remove."
     },
     "aboutUs": {
       "type": "component",
@@ -65,6 +68,17 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::destination.destination"
+    },
+    "testimonials": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::testimonial.testimonial"
+    },
+    "reviewsTitle": {
+      "type": "string"
+    },
+    "reviewsSubtitle": {
+      "type": "string"
     }
   }
 }

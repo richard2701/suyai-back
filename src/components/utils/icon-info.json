@@ -11,6 +11,9 @@
     "description": {
       "type": "string"
     },
+    "url": {
+      "type": "string"
+    },
     "icon": {
       "allowedTypes": [
         "images",
