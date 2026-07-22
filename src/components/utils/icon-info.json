@@ -1,7 +1,8 @@
 {
   "collectionName": "components_utils_icon_infos",
   "info": {
-    "displayName": "IconInfo"
+    "displayName": "Service Card",
+    "description": "A single service card: pick a built-in icon (iconName) or upload a custom one (icon), plus a title, short description and a link. Used for the service cards in the Home services banner and the Transfer page."
   },
   "options": {},
   "attributes": {
@@ -13,6 +14,17 @@
     },
     "url": {
       "type": "string"
+    },
+    "iconName": {
+      "type": "enumeration",
+      "enum": [
+        "plane",
+        "thermal",
+        "compass",
+        "car",
+        "clock",
+        "marker"
+      ]
     },
     "icon": {
       "allowedTypes": [

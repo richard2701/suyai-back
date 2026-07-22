@@ -1,8 +1,8 @@
 {
   "collectionName": "components_commons_about_sections",
   "info": {
-    "displayName": "AboutSection",
-    "description": ""
+    "displayName": "About Us Section",
+    "description": "Home 'About us' section: title, subtitle, description, image gallery, years-in-business counter and the highlighted stat items."
   },
   "options": {},
   "attributes": {
