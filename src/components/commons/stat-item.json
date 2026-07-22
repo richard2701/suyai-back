@@ -1,8 +1,8 @@
 {
   "collectionName": "components_commons_stat_items",
   "info": {
-    "displayName": "StatItem",
-    "description": ""
+    "displayName": "Stat Item",
+    "description": "A single highlighted statistic (label + sub-text), e.g. '15+ / years of experience'. Used in the About Us section."
   },
   "options": {},
   "attributes": {
