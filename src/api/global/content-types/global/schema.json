@@ -30,6 +30,11 @@
       "type": "component",
       "repeatable": false,
       "component": "shared.seo"
+    },
+    "season": {
+      "type": "enumeration",
+      "enum": ["verano", "otoño", "invierno", "primavera"],
+      "required": false
     }
   }
 }
