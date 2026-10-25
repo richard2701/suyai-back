@@ -14,10 +14,10 @@
   },
   "dependencies": {
     "@ckeditor/strapi-plugin-ckeditor": "^1.1.0",
-    "@strapi/plugin-cloud": "5.4.1",
-    "@strapi/plugin-graphql": "^5.9.0",
+    "@strapi/plugin-cloud": "^5.10.2",
+    "@strapi/plugin-graphql": "^5.10.2",
     "@strapi/plugin-seo": "^2.0.8",
-    "@strapi/plugin-users-permissions": "5.4.1",
+    "@strapi/plugin-users-permissions": "^5.10.2",
     "@strapi/provider-email-nodemailer": "^5.48.1",
     "@strapi/provider-email-sendgrid": "^5.12.3",
     "@strapi/provider-upload-cloudinary": "^5.11.0",
@@ -39,6 +39,15 @@
     "@types/react-dom": "^18",
     "typescript": "^5",
     "vitest": "^4.1.9"
+  },
+  "resolutions": {
+    "koa": "^2.15.4",
+    "proxy-addr": "^2.0.8",
+    "shell-quote": "^1.8.4",
+    "form-data": "^4.0.4",
+    "handlebars": "^4.7.10",
+    "@casl/ability": "^6.7.5",
+    "sha.js": "^2.4.12"
   },
   "engines": {
     "node": ">=18.0.0 <=22.x.x",
