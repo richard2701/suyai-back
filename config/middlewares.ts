@@ -31,7 +31,8 @@ const corsOrigin = isDevelopment
       const requestOrigin = ctx.get('Origin');
       return isLocalDevOrigin(requestOrigin) || requestOrigin === 'https://studio.apollographql.com'
         ? requestOrigin
-        : false;
+        // Must be a string: strapi::cors calls .split() on non-array results; '' means no CORS header.
+        : '';
     }
   : frontendOrigins;
 
