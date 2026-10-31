@@ -1,0 +1,57 @@
+name: Auto PR description (develop → main)
+
+# Cada vez que se ABRE un PR hacia main desde develop, rellena el cuerpo
+# del PR con un resumen automático (commits + archivos cambiados).
+on:
+  pull_request:
+    types: [opened]
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  describe:
+    # Solo si el PR viene de develop
+    if: github.event.pull_request.head.ref == 'develop'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build & set PR description
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          # --- Commits del PR ---
+          commits="$(gh pr view "$PR" --repo "$REPO" --json commits \
+            --jq '.commits[] | "- \(.messageHeadline) (\(.oid[0:7]))"')"
+          [ -z "$commits" ] && commits="_Sin commits._"
+
+          # --- Archivos cambiados ---
+          files="$(gh pr view "$PR" --repo "$REPO" --json files \
+            --jq '.files[] | "- `\(.path)` (+\(.additions)/-\(.deletions))"')"
+          [ -z "$files" ] && files="_Sin archivos._"
+
+          file_count="$(gh pr view "$PR" --repo "$REPO" --json files --jq '.files | length')"
+
+          # --- Cuerpo del PR ---
+          body="$(cat <<EOF
+          ## 📝 Resumen automático
+
+          PR de \`develop\` → \`main\`.
+
+          ### Cambios (commits)
+          $commits
+
+          ### Archivos modificados ($file_count)
+          $files
+
+          ---
+          <sub>Descripción generada automáticamente por GitHub Actions.</sub>
+          EOF
+          )"
+
+          gh pr edit "$PR" --repo "$REPO" --body "$body"
