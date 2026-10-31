@@ -4,4 +4,8 @@
 
 import { factories } from '@strapi/strapi';
 
-export default factories.createCoreRouter('api::form-contact.form-contact');
+// Submissions go exclusively through the reCAPTCHA-protected GraphQL mutation,
+// so no REST core routes are exposed (prevents captcha bypass and PII reads).
+export default factories.createCoreRouter('api::form-contact.form-contact', {
+  only: [],
+});

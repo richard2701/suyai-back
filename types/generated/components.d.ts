@@ -3,8 +3,8 @@ import type { Schema, Struct } from '@strapi/strapi';
 export interface CommonsAboutSection extends Struct.ComponentSchema {
   collectionName: 'components_commons_about_sections';
   info: {
-    description: '';
-    displayName: 'AboutSection';
+    description: "Home 'About us' section: title, subtitle, description, image gallery, years-in-business counter and the highlighted stat items.";
+    displayName: 'About Us Section';
   };
   attributes: {
     description: Schema.Attribute.Text;
@@ -43,8 +43,8 @@ export interface CommonsGridCards extends Struct.ComponentSchema {
 export interface CommonsIconSectionBanner extends Struct.ComponentSchema {
   collectionName: 'components_commons_icon_section_banners';
   info: {
-    description: '';
-    displayName: 'IconSectionBanner';
+    description: "Home 'Our services' section: heading, intro text, image, CTA button and the repeatable list of service cards (each with a selectable icon).";
+    displayName: 'Services Banner';
   };
   attributes: {
     button: Schema.Attribute.Component<'utils.button', false>;
@@ -79,8 +79,8 @@ export interface CommonsSectionCardsRecommended extends Struct.ComponentSchema {
 export interface CommonsStatItem extends Struct.ComponentSchema {
   collectionName: 'components_commons_stat_items';
   info: {
-    description: '';
-    displayName: 'StatItem';
+    description: "A single highlighted statistic (label + sub-text), e.g. '15+ / years of experience'. Used in the About Us section.";
+    displayName: 'Stat Item';
   };
   attributes: {
     label: Schema.Attribute.String;
@@ -219,7 +219,7 @@ export interface UtilsFooter extends Struct.ComponentSchema {
 export interface UtilsHero extends Struct.ComponentSchema {
   collectionName: 'components_utils_heroes';
   info: {
-    description: '';
+    description: 'Top hero banner of a page: background image, title, description, primary/secondary buttons, badge, rating, traveler count, trust bullets and reviewer avatars.';
     displayName: 'Hero';
     icon: 'bold';
   };
@@ -243,11 +243,15 @@ export interface UtilsHero extends Struct.ComponentSchema {
 export interface UtilsIconInfo extends Struct.ComponentSchema {
   collectionName: 'components_utils_icon_infos';
   info: {
-    displayName: 'IconInfo';
+    description: 'A single service card: pick a built-in icon (iconName) or upload a custom one (icon), plus a title, short description and a link. Used for the service cards in the Home services banner and the Transfer page.';
+    displayName: 'Service Card';
   };
   attributes: {
     description: Schema.Attribute.String;
     icon: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    iconName: Schema.Attribute.Enumeration<
+      ['plane', 'thermal', 'compass', 'car', 'clock', 'marker']
+    >;
     title: Schema.Attribute.String;
     url: Schema.Attribute.String;
   };

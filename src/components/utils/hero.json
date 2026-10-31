@@ -3,7 +3,7 @@
   "info": {
     "displayName": "Hero",
     "icon": "bold",
-    "description": ""
+    "description": "Top hero banner of a page: background image, title, description, primary/secondary buttons, badge, rating, traveler count, trust bullets and reviewer avatars."
   },
   "options": {},
   "attributes": {

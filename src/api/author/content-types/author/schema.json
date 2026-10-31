@@ -26,7 +26,8 @@
       ]
     },
     "email": {
-      "type": "string"
+      "type": "string",
+      "private": true
     },
     "articles": {
       "type": "relation",

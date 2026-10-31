@@ -1,8 +1,8 @@
 {
   "collectionName": "components_commons_icon_section_banners",
   "info": {
-    "displayName": "IconSectionBanner",
-    "description": ""
+    "displayName": "Services Banner",
+    "description": "Home 'Our services' section: heading, intro text, image, CTA button and the repeatable list of service cards (each with a selectable icon)."
   },
   "options": {},
   "attributes": {

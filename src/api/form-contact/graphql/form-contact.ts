@@ -1,4 +1,12 @@
 import { validateRecaptcha } from '../services/recaptcha';
+import { pickFields } from '../../../utils/pick-fields';
+import { formRateLimitMiddleware } from '../../../utils/form-rate-limit';
+import { assertValidFormInput } from '../../../utils/form-validation';
+
+// Fields a public visitor may submit (mirrors the FE mutation payload).
+// Server-managed fields such as `emailSent` are intentionally excluded.
+const CONTACT_FIELDS = ['name', 'lastname', 'email', 'phone', 'message'] as const;
+
 export default {
   register({ strapi }) {
     const extensionService = strapi.plugin('graphql').service('extension');
@@ -13,6 +21,8 @@ export default {
       resolversConfig: {
         'Mutation.createFormContact': {
           auth: false,
+          // Per-IP limit, applied before the resolver (and therefore before reCAPTCHA).
+          middlewares: [formRateLimitMiddleware],
         },
       },
       resolvers: {
@@ -20,7 +30,9 @@ export default {
           createFormContact: {
             resolve: async (parent, args, context) => {
               const { data } = args;
-              const { recaptchaToken, ...formData } = data;
+              const { recaptchaToken } = data;
+              // Trim + length/URL/format checks before the billed reCAPTCHA call.
+              const formData = assertValidFormInput(pickFields(data, CONTACT_FIELDS));
 
               // verify token with reCAPTCHA
               if (!recaptchaToken) {

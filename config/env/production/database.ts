@@ -2,6 +2,7 @@ const { parse } = require("pg-connection-string");
 
 module.exports = ({ env }) => {
   const { host, port, database, user, password } = parse(env("DATABASE_URL"));
+  const useSsl = env.bool("DATABASE_SSL", false);
 
   return {
     connection: {
@@ -11,7 +12,10 @@ module.exports = ({ env }) => {
         port,
         database,
         user,
-        password
+        password,
+        ssl: useSsl
+          ? { rejectUnauthorized: env.bool("DATABASE_SSL_REJECT_UNAUTHORIZED", true) }
+          : false,
       },
       debug: false,
     },
