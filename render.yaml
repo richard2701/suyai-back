@@ -28,6 +28,35 @@ services:
         generateValue: true
       - key: APP_KEYS
         generateValue: true
+      - key: API_TOKEN_SALT
+        sync: false
+      - key: TRANSFER_TOKEN_SALT
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+      - key: SMTP_EMAIL_ADMIN
+        sync: false
+      # Comma-separated exact SPA origins, e.g. https://example.com,https://www.example.com
+      - key: FRONTEND_URL
+        sync: false
+      # Header holding the real client IP (defaults to cf-connecting-ip, see src/index.ts).
+      - key: PROXY_IP_HEADER
+        sync: false
+      # Public form limit per IP (defaults: 5 per 10 minutes).
+      - key: FORM_RATE_LIMIT_MAX
+        sync: false
+      - key: FORM_RATE_LIMIT_WINDOW_MINUTES
+        sync: false
+      - key: CLOUDINARY_FOLDER
+        sync: false
+      - key: RECAPTCHA_API_KEY
+        sync: false
+      - key: RECAPTCHA_PROJECT_ID
+        sync: false
+      - key: RECAPTCHA_SECRET_KEY
+        sync: false
 
 databases:
   - name: strapi

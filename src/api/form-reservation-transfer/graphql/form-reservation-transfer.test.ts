@@ -7,6 +7,7 @@ vi.mock('../services/recaptcha', () => ({
 }));
 
 import registerGraphql from './form-reservation-transfer';
+import { validateRecaptcha } from '../services/recaptcha';
 
 type ResolverFn = (parent: unknown, args: unknown, context: unknown) => Promise<unknown>;
 
@@ -68,6 +69,16 @@ describe('createFormReservationTransfer resolver', () => {
     expect(passed.recaptchaToken).toBeUndefined();
   });
 
+  it('drops fields outside the allowlist (mass assignment guard)', async () => {
+    const { resolver, create } = buildResolver();
+    await resolver(null, { data: { ...validData, emailSent: true, publishedAt: null } }, {});
+
+    const passed = create.mock.calls[0][0].data;
+    expect(passed.emailSent).toBeUndefined();
+    expect('publishedAt' in passed).toBe(false);
+    expect(passed.name).toBe('Ada');
+  });
+
   it('rejects when destination is missing', async () => {
     const { resolver, create } = buildResolver();
     const { destination, ...data } = validData;
@@ -86,5 +97,31 @@ describe('createFormReservationTransfer resolver', () => {
       'El campo pickupTime es requerido.'
     );
     expect(create).not.toHaveBeenCalled();
+  });
+
+  it('rejects URLs in echoed fields before calling reCAPTCHA', async () => {
+    const { resolver, create } = buildResolver();
+
+    await expect(
+      resolver(null, { data: { ...validData, name: 'Win a prize at evil.com' } }, {})
+    ).rejects.toThrow('Invalid form input.');
+    expect(validateRecaptcha).not.toHaveBeenCalled();
+    expect(create).not.toHaveBeenCalled();
+  });
+
+  it('rejects malformed phone numbers', async () => {
+    const { resolver, create } = buildResolver();
+
+    await expect(
+      resolver(null, { data: { ...validData, phone: 'call me http://x' } }, {})
+    ).rejects.toThrow('Invalid form input.');
+    expect(create).not.toHaveBeenCalled();
+  });
+
+  it('trims values before persisting', async () => {
+    const { resolver, create } = buildResolver();
+    await resolver(null, { data: { ...validData, name: '  Ada  ' } }, {});
+
+    expect(create.mock.calls[0][0].data.name).toBe('Ada');
   });
 });

@@ -1,3 +1,5 @@
+import { forcePublishedApolloPlugin } from '../src/utils/publication-guard';
+
 export default ({ env }) => ({
   graphql: {
     config: {
@@ -11,14 +13,26 @@ export default ({ env }) => ({
         }
       },// disable Sandbox everywhere
       depthLimit: 7,
-      playground: true, // Enable the GraphQL playground
-      introspection: true, // Allow introspection queries
-      defaultLimit: 100, // Default limit for queries
-      maxLimit: 500
+      // Only apolloServer options reach Apollo; top-level playground/introspection are ignored.
+      apolloServer: {
+        introspection: env('NODE_ENV') !== 'production',
+        // Disable the plugin's default permissive route-level cors() so the global
+        // strapi::cors allowlist (config/middlewares.ts) is the only CORS policy on /graphql.
+        cors: false,
+        // Disable Automatic Persisted Queries: hash-only requests carry no query text and
+        // there is no client that uses APQ. Passed straight through to ApolloServer.
+        persistedQueries: false,
+        // Appended after plugin-graphql's own plugins (arrays are concatenated): stops public
+        // callers from reading drafts via `status: DRAFT`, including nested relations.
+        plugins: [forcePublishedApolloPlugin],
+      },
+      defaultLimit: 100,
+      maxLimit: 100,
     },
   },
   upload: {
     config: {
+      sizeLimit: 10 * 1024 * 1024, // bytes; keep in sync with strapi::body formidable.maxFileSize
       provider: 'cloudinary',
       providerOptions: {
         cloud_name: env('CLOUDINARY_NAME'),
