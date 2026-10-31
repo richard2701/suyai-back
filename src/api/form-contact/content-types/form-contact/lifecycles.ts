@@ -25,7 +25,10 @@ export default {
           message: result.message,
           copyYear: new Date().getFullYear().toString(),
         };
-        emailTemplate = renderTemplate(emailTemplate, templateVars);
+        // The submitter copy goes to an attacker-controllable address, so it must
+        // not echo free-text input (prevents using the form as a spam/phishing
+        // relay). The admin copy keeps the full message.
+        emailTemplate = renderTemplate(emailTemplate, { ...templateVars, message: '' });
         emailTemplateCopy = renderTemplate(emailTemplateCopy, templateVars);
 
         // Send the email

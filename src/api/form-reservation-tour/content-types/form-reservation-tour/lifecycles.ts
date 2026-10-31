@@ -24,7 +24,7 @@ export default {
           tourNameChange = result.tourName
         }
         // Replace placeholders with HTML-escaped data
-        emailTemplate = renderTemplate(emailTemplate, {
+        const templateVars = {
           name: result.name,
           lastname: result.lastname,
           tourName: tourNameChange,
@@ -34,7 +34,12 @@ export default {
           tourDate: result.tourDate,
           people: result.people,
           copyYear: new Date().getFullYear().toString(),
-        });
+        };
+        // The submitter copy goes to an attacker-controllable address, so it must
+        // not echo free-text input (prevents using the form as a spam/phishing
+        // relay). The admin copy keeps the full message.
+        const emailTemplateCopy = renderTemplate(emailTemplate, templateVars);
+        emailTemplate = renderTemplate(emailTemplate, { ...templateVars, message: '' });
 
         // Send the email
         await sendEmail({
@@ -51,7 +56,7 @@ export default {
           from: env.SMTP_FROM,
           replyTo: result.email,
           subject: 'Reservación de Tour Copía',
-          html: emailTemplate,
+          html: emailTemplateCopy,
         });
 
         // Update the record to mark email as sent
