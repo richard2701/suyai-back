@@ -8,12 +8,13 @@
  *
  * Routes are registered with `auth: false` so the users-permissions plugin does
  * not block them; admin-only endpoints are gated here by verifying the Strapi
- * admin JWT, so token data is never exposed through the public Users &
- * Permissions roles.
+ * admin access token through the admin session manager, so token data is
+ * never exposed through the public Users & Permissions roles.
  */
 
 import { factories } from '@strapi/strapi';
 import type { Context } from 'koa';
+import { resolveAdminUser } from '../utils/admin-auth';
 
 const UID = 'api::feature-flag-token.feature-flag-token' as const;
 
@@ -21,27 +22,13 @@ type ValidateReason = 'expired' | 'not_found' | 'revoked';
 
 export default factories.createCoreController(UID, ({ strapi }) => {
   /**
-   * Returns the active admin user for a valid admin JWT, or null otherwise.
-   * Verifies the bearer token against Strapi's admin token service.
+   * Returns the active admin user for a valid admin access token, or null otherwise.
+   * Uses the admin session manager, mirroring Strapi's own admin auth strategy. Every null
+   * case is "not authenticated" (the strategy returns `authenticated: false` for all of them),
+   * so callers answer 401: the admin fetch client (getFetchClient) only refreshes the
+   * short-lived access token and retries on 401, never on 403.
    */
-  const getAdminUser = async (ctx: Context) => {
-    const authHeader = ctx.request.header.authorization ?? '';
-    if (!authHeader.startsWith('Bearer ')) return null;
-    const jwt = authHeader.slice('Bearer '.length).trim();
-    if (!jwt) return null;
-
-    try {
-      const { isValid, payload } = strapi.service('admin::token').decodeJwtToken(jwt);
-      if (!isValid || !payload?.id) return null;
-      const adminUser = await strapi.db
-        .query('admin::user')
-        .findOne({ where: { id: payload.id } });
-      if (!adminUser || adminUser.isActive === false) return null;
-      return adminUser;
-    } catch {
-      return null;
-    }
-  };
+  const getAdminUser = (ctx: Context) => resolveAdminUser(strapi, ctx.request.header.authorization);
 
   /** Shape returned to the admin page (flat — Strapi v5 has no `attributes` wrapper). */
   const present = (record: Record<string, unknown>) => ({
@@ -56,7 +43,7 @@ export default factories.createCoreController(UID, ({ strapi }) => {
   return {
     async generate(ctx: Context) {
       const admin = await getAdminUser(ctx);
-      if (!admin) return ctx.forbidden('Admin access required');
+      if (!admin) return ctx.unauthorized('Admin authentication required');
 
       const { label } = (ctx.request.body ?? {}) as { label?: string };
       const record = await strapi.service(UID).generateToken(label);
@@ -92,7 +79,7 @@ export default factories.createCoreController(UID, ({ strapi }) => {
 
     async find(ctx: Context) {
       const admin = await getAdminUser(ctx);
-      if (!admin) return ctx.forbidden('Admin access required');
+      if (!admin) return ctx.unauthorized('Admin authentication required');
 
       const limitParam = Number((ctx.query?.pagination as { limit?: string })?.limit);
       const limit = Number.isFinite(limitParam) && limitParam > 0 ? limitParam : 5;
@@ -107,7 +94,7 @@ export default factories.createCoreController(UID, ({ strapi }) => {
 
     async update(ctx: Context) {
       const admin = await getAdminUser(ctx);
-      if (!admin) return ctx.forbidden('Admin access required');
+      if (!admin) return ctx.unauthorized('Admin authentication required');
 
       const { id } = ctx.params;
       const { active } = ((ctx.request.body ?? {}) as { data?: { active?: boolean } }).data ?? {};

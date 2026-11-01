@@ -1,7 +1,7 @@
 import { GraphQLError } from 'graphql';
 import { createLimiter, formRateLimitOptionsFromEnv, type RateLimiter } from './rate-limit-store';
 
-/** Subset of the plugin-graphql resolver context used here ({ state, koaContext } in 5.59). */
+/** Subset of the plugin-graphql resolver context used here ({ state, koaContext } in 5.60 bootstrap.ts). */
 export interface FormResolverContext {
   koaContext?: { ip?: string };
 }
