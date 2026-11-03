@@ -11,7 +11,7 @@ function mockAssessment(body: unknown) {
   );
 }
 
-describe('validateRecaptcha (form-reservation-tour)', () => {
+describe('validateRecaptcha', () => {
   beforeEach(() => {
     vi.stubEnv('RECAPTCHA_API_KEY', 'test-api-key');
     vi.stubEnv('RECAPTCHA_PROJECT_ID', 'test-project');
@@ -26,36 +26,36 @@ describe('validateRecaptcha (form-reservation-tour)', () => {
   it('accepts a token whose action matches the expected action and score passes', async () => {
     mockAssessment({
       riskAnalysis: { score: 0.9 },
-      tokenProperties: { valid: true, action: 'tour_reservation' },
+      tokenProperties: { valid: true, action: 'contact_form' },
     });
 
-    await expect(validateRecaptcha('token', 'tour_reservation')).resolves.toBe(true);
+    await expect(validateRecaptcha('token', 'contact_form')).resolves.toBe(true);
   });
 
   it('rejects a token whose action does not match, even with a valid high score', async () => {
     mockAssessment({
       riskAnalysis: { score: 0.9 },
-      tokenProperties: { valid: true, action: 'contact_form' },
+      tokenProperties: { valid: true, action: 'tour_reservation' },
     });
 
-    await expect(validateRecaptcha('token', 'tour_reservation')).resolves.toBe(false);
+    await expect(validateRecaptcha('token', 'contact_form')).resolves.toBe(false);
   });
 
   it('rejects when the score is below threshold, regardless of action match', async () => {
     mockAssessment({
       riskAnalysis: { score: 0.1 },
-      tokenProperties: { valid: true, action: 'tour_reservation' },
+      tokenProperties: { valid: true, action: 'contact_form' },
     });
 
-    await expect(validateRecaptcha('token', 'tour_reservation')).resolves.toBe(false);
+    await expect(validateRecaptcha('token', 'contact_form')).resolves.toBe(false);
   });
 
   it('rejects when tokenProperties.valid is false', async () => {
     mockAssessment({
       riskAnalysis: { score: 0.9 },
-      tokenProperties: { valid: false, action: 'tour_reservation' },
+      tokenProperties: { valid: false, action: 'contact_form' },
     });
 
-    await expect(validateRecaptcha('token', 'tour_reservation')).resolves.toBe(false);
+    await expect(validateRecaptcha('token', 'contact_form')).resolves.toBe(false);
   });
 });
