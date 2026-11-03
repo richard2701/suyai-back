@@ -3,6 +3,7 @@ import formReservationTourExtension from './api/form-reservation-tour/graphql/fo
 import formContact from './api/form-contact/graphql/form-contact';
 import { assertResendConfigured } from './utils/send-email';
 import { createForcePublishedDocumentMiddleware, draftAndPublishApiUids } from './utils/publication-guard';
+import { enforceRolePermissions } from './utils/role-permissions';
 
 export default {
   register({ strapi }) {
@@ -57,7 +58,10 @@ export default {
     // Legacy single type with PII fields; unused by the frontend.
     shadowCRUD('api::form.form').disable();
   },
-  bootstrap() {
+  async bootstrap({ strapi }) {
+    // Reproducible least-privilege roles and sign-up off; survives DB restores and admin drift.
+    await enforceRolePermissions(strapi as unknown as Parameters<typeof enforceRolePermissions>[0]);
+
     // Email is lazily initialized (src/utils/send-email.ts) so local dev can
     // boot without a Resend key. Production doesn't get that grace period —
     // fail the deploy immediately if it's misconfigured, rather than only
