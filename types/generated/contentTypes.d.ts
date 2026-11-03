@@ -693,7 +693,7 @@ export interface ApiFormContactFormContact extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     message: Schema.Attribute.Text &
       Schema.Attribute.SetMinMaxLength<{
-        maxLength: 500;
+        maxLength: 2000;
       }>;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     phone: Schema.Attribute.String & Schema.Attribute.Required;
@@ -721,9 +721,9 @@ export interface ApiFormReservationTourFormReservationTour
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    email: Schema.Attribute.Email;
+    email: Schema.Attribute.Email & Schema.Attribute.Required;
     emailSent: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    lastname: Schema.Attribute.String;
+    lastname: Schema.Attribute.String & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -732,15 +732,15 @@ export interface ApiFormReservationTourFormReservationTour
       Schema.Attribute.Private;
     message: Schema.Attribute.Text &
       Schema.Attribute.SetMinMaxLength<{
-        maxLength: 400;
+        maxLength: 2000;
       }>;
-    name: Schema.Attribute.String;
-    people: Schema.Attribute.Integer;
-    phone: Schema.Attribute.Text;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    people: Schema.Attribute.Integer & Schema.Attribute.Required;
+    phone: Schema.Attribute.Text & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
-    tourDate: Schema.Attribute.Date;
+    tourDate: Schema.Attribute.Date & Schema.Attribute.Required;
     tourId: Schema.Attribute.String;
-    tourName: Schema.Attribute.String;
+    tourName: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -763,9 +763,9 @@ export interface ApiFormReservationTransferFormReservationTransfer
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     destination: Schema.Attribute.String & Schema.Attribute.Required;
-    email: Schema.Attribute.Email;
+    email: Schema.Attribute.Email & Schema.Attribute.Required;
     emailSent: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    lastname: Schema.Attribute.String;
+    lastname: Schema.Attribute.String & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -774,14 +774,14 @@ export interface ApiFormReservationTransferFormReservationTransfer
       Schema.Attribute.Private;
     message: Schema.Attribute.Text &
       Schema.Attribute.SetMinMaxLength<{
-        maxLength: 400;
+        maxLength: 2000;
       }>;
     name: Schema.Attribute.String & Schema.Attribute.Required;
-    people: Schema.Attribute.Integer;
-    phone: Schema.Attribute.Text;
+    people: Schema.Attribute.Integer & Schema.Attribute.Required;
+    phone: Schema.Attribute.Text & Schema.Attribute.Required;
     pickupTime: Schema.Attribute.Time & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
-    transferDate: Schema.Attribute.Date;
+    transferDate: Schema.Attribute.Date & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

@@ -15,27 +15,32 @@
       "required": true
     },
     "email": {
-      "type": "email"
+      "type": "email",
+      "required": true
     },
     "emailSent": {
       "type": "boolean",
       "default": false
     },
     "phone": {
-      "type": "text"
+      "type": "text",
+      "required": true
     },
     "message": {
       "type": "text",
-      "maxLength": 400
+      "maxLength": 2000
     },
     "transferDate": {
-      "type": "date"
+      "type": "date",
+      "required": true
     },
     "lastname": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "people": {
-      "type": "integer"
+      "type": "integer",
+      "required": true
     },
     "destination": {
       "type": "string",
