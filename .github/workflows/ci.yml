@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+
+# Read-only token: this workflow only builds and tests, it never writes to the repo.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Type-check and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          # Strapi 5 supports Node <=22 (see package.json engines).
+          node-version: 22
+          cache: yarn
+
+      # --ignore-scripts skips native builds (better-sqlite3 is unused, the DB is Postgres).
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --ignore-scripts
+
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      - name: Unit tests
+        run: yarn test
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Informational for now: existing advisories would otherwise block every PR.
+    # Remove continue-on-error once the baseline is clean.
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
+      # yarn v1 exits with a bitmask (4 = moderate, 8 = high, 16 = critical) and ignores
+      # --level for the exit code, so mask out everything below high.
+      - name: Audit production dependencies (fail on high or critical)
+        run: |
+          yarn audit --groups dependencies || code=$?
+          [ $(( ${code:-0} & 24 )) -eq 0 ]
