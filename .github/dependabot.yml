@@ -1,0 +1,34 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    target-branch: develop
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      # Strapi packages must move together: mixed versions break the admin build.
+      strapi:
+        patterns:
+          - "@strapi/*"
+          - "strapi"
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - "@strapi/*"
+          - "strapi"
+    ignore:
+      # Major Strapi upgrades are planned manually (see the core upgrade PR #64).
+      - dependency-name: "@strapi/*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: develop
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3

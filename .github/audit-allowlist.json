@@ -1,0 +1,10 @@
+{
+  "accepted": [
+    {
+      "id": 1243066,
+      "module": "zod",
+      "reason": "No safe fix: forcing zod 4 breaks koa-session at load time (z.function().args is not a function). Reached via @strapi/core > koa-session > zod 3.25.76.",
+      "issue": "https://github.com/richard2701/suyai-back/issues/78"
+    }
+  ]
+}
