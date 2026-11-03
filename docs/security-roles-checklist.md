@@ -8,12 +8,20 @@ The site has no end-user accounts, so Public and Authenticated roles must stay l
 
 - Revokes from **Public and Authenticated**: any action on `form-contact`, `form-reservation-tour`,
   `form-reservation-transfer`, `form`, `feature-flag-token`, every `plugin::upload.*` action,
-  and `users-permissions` `user.find` / `user.findOne`.
-- Revokes from **Public**: `auth.register`, `auth.connect`, `auth.forgotPassword`.
-- Sets users-permissions advanced setting `allow_register` to `false`.
+  and every users-permissions `role.*` action.
+- Revokes from **Public**: every users-permissions action (`user.*`, `auth.*`) except `auth.callback`.
+- Revokes from **Authenticated**: every users-permissions `user.*` action except `user.me`.
+- Sets users-permissions advanced setting `allow_register` to `false`, keeping the other advanced
+  settings. If the `advanced` key is missing it logs a warning and does not write.
 - Logs the remaining Authenticated grants (`[permissions] authenticated grants kept (review)`) so they can be reviewed.
+- If enforcement throws (for example a DB error), boot continues and logs
+  `[permissions] enforcement failed, roles NOT hardened`. Search the deploy log for it.
 
 Form submissions are unaffected: the 3 form mutations are `auth: false` GraphQL mutations.
+
+**Limits:** enforcement runs once per boot. A permission re-granted in the admin panel afterwards stays
+until the next restart. Content-type read grants (Public `find`/`findOne`) are not enforced in code,
+so review them manually below.
 
 ## Manual verification after deploy (production)
 

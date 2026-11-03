@@ -60,7 +60,12 @@ export default {
   },
   async bootstrap({ strapi }) {
     // Reproducible least-privilege roles and sign-up off; survives DB restores and admin drift.
-    await enforceRolePermissions(strapi as unknown as Parameters<typeof enforceRolePermissions>[0]);
+    // A failure here must not take the site down; log it loudly so the deploy log shows it.
+    try {
+      await enforceRolePermissions(strapi);
+    } catch (error) {
+      strapi.log.error(`[permissions] enforcement failed, roles NOT hardened: ${String(error)}`);
+    }
 
     // Email is lazily initialized (src/utils/send-email.ts) so local dev can
     // boot without a Resend key. Production doesn't get that grace period —
