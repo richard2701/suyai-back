@@ -2,12 +2,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock the reCAPTCHA service so the resolver's token gate always passes;
 // these tests target the required-field validation, not reCAPTCHA.
-vi.mock('../services/recaptcha', () => ({
+vi.mock('../../../utils/recaptcha', () => ({
   validateRecaptcha: vi.fn().mockResolvedValue(true),
 }));
 
 import registerGraphql from './form-reservation-transfer';
-import { validateRecaptcha } from '../services/recaptcha';
+import { validateRecaptcha } from '../../../utils/recaptcha';
 
 type ResolverFn = (parent: unknown, args: unknown, context: unknown) => Promise<unknown>;
 
@@ -19,7 +19,8 @@ const SERVICE_UID = 'api::form-reservation-transfer.form-reservation-transfer';
  * together with the `create` spy so tests can assert persistence.
  */
 function buildResolver() {
-  const create = vi.fn().mockResolvedValue({ id: 1 });
+  const create = vi.fn().mockResolvedValue({ id: 1, documentId: 'doc-1', emailSent: false });
+  const findOne = vi.fn().mockResolvedValue({ id: 1, documentId: 'doc-1', emailSent: true });
   let resolver: ResolverFn = async () => undefined;
 
   const strapi = {
@@ -34,10 +35,11 @@ function buildResolver() {
     services: {
       [SERVICE_UID]: { create },
     },
+    documents: () => ({ findOne }),
   };
 
   registerGraphql.register({ strapi });
-  return { resolver, create };
+  return { resolver, create, findOne };
 }
 
 const validData = {
@@ -67,6 +69,27 @@ describe('createFormReservationTransfer resolver', () => {
     expect(passed.pickupTime).toBe('08:30:00.000');
     // recaptchaToken must be stripped before persisting.
     expect(passed.recaptchaToken).toBeUndefined();
+  });
+
+  it('returns the re-fetched entity so emailSent reflects the real delivery status', async () => {
+    const { resolver, findOne } = buildResolver();
+    const response = await resolver(null, { data: { ...validData } }, {});
+
+    expect(findOne).toHaveBeenCalledWith({ documentId: 'doc-1' });
+    expect(response).toMatchObject({ emailSent: true });
+  });
+
+  it('throws GraphQLErrors with extension codes so the frontend can read the reason', async () => {
+    const { resolver } = buildResolver();
+    const { destination, ...data } = validData;
+
+    await expect(resolver(null, { data }, {})).rejects.toMatchObject({
+      extensions: { code: 'BAD_USER_INPUT' },
+    });
+    vi.mocked(validateRecaptcha).mockResolvedValueOnce(false);
+    await expect(resolver(null, { data: { ...validData } }, {})).rejects.toMatchObject({
+      extensions: { code: 'RECAPTCHA_FAILED' },
+    });
   });
 
   it('drops fields outside the allowlist (mass assignment guard)', async () => {
