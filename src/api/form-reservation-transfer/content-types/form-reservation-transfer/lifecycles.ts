@@ -1,70 +1,18 @@
-import fs from 'fs';
-import path from 'path';
-import { env } from 'process';
-import { renderTemplate } from '../../../../utils/render-template';
-import { sendEmail } from '../../../../utils/send-email';
-export default {
-  async afterCreate(event) {
-    const { result } = event;
+import { createFormLifecycle } from '../../../../utils/create-form-lifecycle';
 
-    // Prevent duplicate execution using a flag
-    if (!result.emailSent) {
-      try {
-        // Load the email template
-        const templatePath = path.resolve(__dirname, '../../../../../../config/email/templates/reservation_transfer.html');
-        const templatePathCopy = path.resolve(__dirname, '../../../../../../config/email/templates/reservation_transfer_copy.html');
-        let emailTemplate = fs.readFileSync(templatePath, 'utf-8');
-        let emailTemplateCopy = fs.readFileSync(templatePathCopy, 'utf-8');
-
-        // Replace placeholders with HTML-escaped data
-        const templateVars = {
-          name: result.name,
-          lastname: result.lastname,
-          email: result.email,
-          phone: result.phone,
-          message: result.message,
-          transferDate: result.transferDate,
-          people: result.people,
-          destination: result.destination,
-          pickupTime: result.pickupTime,
-          copyYear: new Date().getFullYear().toString(),
-        };
-        // The submitter copy goes to an attacker-controllable address, so it must
-        // not echo free-text input (prevents using the form as a spam/phishing
-        // relay). The admin copy keeps the full message.
-        emailTemplate = renderTemplate(emailTemplate, { ...templateVars, message: '' });
-        emailTemplateCopy = renderTemplate(emailTemplateCopy, templateVars);
-
-
-        // Send the email
-        await sendEmail({
-          to: result.email,
-          from: env.SMTP_FROM,
-          replyTo: env.SMTP_EMAIL_ADMIN,
-          subject: 'Reservacion Transfer',
-          html: emailTemplate,
-        });
-
-        // Send copy email
-        await sendEmail({
-          to: env.SMTP_EMAIL_ADMIN,
-          from: env.SMTP_FROM,
-          replyTo: result.email,
-          subject: 'Reservacion Transfer Copía',
-          html: emailTemplateCopy,
-        });
-
-
-        // Update the record to mark email as sent
-        // Mark email as sent
-        // Use `strapi.db.query` instead of `entityService.update`
-        await strapi.db.query("api::form-reservation-transfer.form-reservation-transfer").update({
-          where: { id: result.id },
-          data: { emailSent: true },
-        });
-      } catch (err) {
-        console.error("Error sending email:", err);
-      }
-    }
-  }
-};
+export default createFormLifecycle({
+  uid: 'api::form-reservation-transfer.form-reservation-transfer',
+  submitter: { template: 'reservation_transfer.html', subject: 'Reservacion Transfer' },
+  admin: { template: 'reservation_transfer_copy.html', subject: 'Reservacion Transfer Copía' },
+  buildVars: (result) => ({
+    name: result.name,
+    lastname: result.lastname,
+    email: result.email,
+    phone: result.phone,
+    message: result.message,
+    transferDate: result.transferDate,
+    people: result.people,
+    destination: result.destination,
+    pickupTime: result.pickupTime,
+  }),
+});

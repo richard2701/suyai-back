@@ -1,62 +1,10 @@
-import { validateRecaptcha } from '../services/recaptcha';
-import { pickFields } from '../../../utils/pick-fields';
-import { formRateLimitMiddleware } from '../../../utils/form-rate-limit';
-import { assertValidFormInput } from '../../../utils/form-validation';
+import { createFormResolver } from '../../../utils/create-form-resolver';
 
-// Fields a public visitor may submit (mirrors the FE mutation payload).
-// Server-managed fields such as `emailSent` are intentionally excluded.
-const CONTACT_FIELDS = ['name', 'lastname', 'email', 'phone', 'message'] as const;
-
-export default {
-  register({ strapi }) {
-    const extensionService = strapi.plugin('graphql').service('extension');
-
-    extensionService.use(({ nexus }) => ({
-
-      typeDefs: `
-        extend input FormContactInput {
-          recaptchaToken: String!
-        }
-      `,
-      resolversConfig: {
-        'Mutation.createFormContact': {
-          auth: false,
-          // Per-IP limit, applied before the resolver (and therefore before reCAPTCHA).
-          middlewares: [formRateLimitMiddleware],
-        },
-      },
-      resolvers: {
-        Mutation: {
-          createFormContact: {
-            resolve: async (parent, args, context) => {
-              const { data } = args;
-              const { recaptchaToken } = data;
-              // Trim + length/URL/format checks before the billed reCAPTCHA call.
-              const formData = assertValidFormInput(pickFields(data, CONTACT_FIELDS));
-
-              // verify token with reCAPTCHA
-              if (!recaptchaToken) {
-                throw new Error('reCAPTCHA token is required');
-              }
-              const isValid = await validateRecaptcha(recaptchaToken, 'contact_form');
-              if (!isValid) {
-                throw new Error('reCAPTCHA inválido.');
-              }
-
-              const requiredFields = ['name', 'lastname', 'email', 'phone'];
-              for (const field of requiredFields) {
-                if (!formData[field]) {
-                  throw new Error(`El campo ${field} es requerido.`);
-                }
-              }
-
-              const response = await strapi.services['api::form-contact.form-contact'].create({ data: formData });
-              return response;
-            }
-          },
-        },
-      },
-    }));
-  },
-};
-
+export default createFormResolver({
+  uid: 'api::form-contact.form-contact',
+  mutation: 'createFormContact',
+  inputType: 'FormContactInput',
+  fields: ['name', 'lastname', 'email', 'phone', 'message'],
+  required: ['name', 'lastname', 'email', 'phone'],
+  recaptchaAction: 'contact_form',
+});
