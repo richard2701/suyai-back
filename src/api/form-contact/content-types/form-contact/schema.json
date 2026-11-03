@@ -28,7 +28,7 @@
     },
     "message": {
       "type": "text",
-      "maxLength": 500
+      "maxLength": 2000
     },
     "emailSent": {
       "type": "boolean",
