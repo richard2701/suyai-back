@@ -44,9 +44,6 @@ jobs:
     name: Dependency audit
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    # Informational for now: existing advisories would otherwise block every PR.
-    # Remove continue-on-error once the baseline is clean.
-    continue-on-error: true
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -56,9 +53,6 @@ jobs:
         with:
           node-version: 22
 
-      # yarn v1 exits with a bitmask (4 = moderate, 8 = high, 16 = critical) and ignores
-      # --level for the exit code, so mask out everything below high.
-      - name: Audit production dependencies (fail on high or critical)
-        run: |
-          yarn audit --groups dependencies || code=$?
-          [ $(( ${code:-0} & 24 )) -eq 0 ]
+      # Fails on any high/critical advisory not accepted in .github/audit-allowlist.json.
+      - name: Audit production dependencies (fail on new high or critical)
+        run: node .github/scripts/audit-gate.mjs
