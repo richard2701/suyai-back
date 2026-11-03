@@ -23,7 +23,7 @@
     "@strapi/provider-upload-cloudinary": "5.60.0",
     "@strapi/strapi": "5.60.0",
     "@tabler/icons-react": "^3.50.0",
-    "better-sqlite3": "^11.8.1",
+    "better-sqlite3": "^13.0.3",
     "fs-extra": "^10.0.0",
     "graphql": "16.10.0",
     "mime-types": "^2.1.27",
