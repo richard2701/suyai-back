@@ -15,14 +15,18 @@ interface Doc {
   createdAt: string;
 }
 
+interface CreatedAtFilterParams {
+  filters: { createdAt: { $lt: string } };
+}
+
 /** In-memory Document Service mock honoring the createdAt $lt filter, limit and delete. */
 const makeStrapi = (data: Record<string, Doc[]>, failOn: Record<string, 'count' | 'delete'> = {}) => {
   const store = Object.fromEntries(Object.entries(data).map(([k, v]) => [k, [...v]]));
   const log = { info: vi.fn(), error: vi.fn(), warn: vi.fn() };
   const calls = { findMany: [] as Record<string, unknown>[], deleted: [] as string[] };
-  const matching = (uid: string, params: Record<string, any>): Doc[] =>
+  const matching = (uid: string, params: Record<string, unknown>): Doc[] =>
     (store[uid] ?? [])
-      .filter((d) => d.createdAt < params.filters.createdAt.$lt)
+      .filter((d) => d.createdAt < (params as CreatedAtFilterParams).filters.createdAt.$lt)
       .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
 
   const strapi: PurgeStrapi = {

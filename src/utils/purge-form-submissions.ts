@@ -29,7 +29,7 @@ export interface PurgeLogger {
 
 /** Minimal slice of the Strapi instance used here, so tests can inject a mock. */
 export interface PurgeStrapi {
-  documents: (uid: any) => {
+  documents: (uid: string) => {
     count: (params: Record<string, unknown>) => Promise<number>;
     findMany: (params: Record<string, unknown>) => Promise<Array<{ documentId: string }>>;
     delete: (params: { documentId: string }) => Promise<unknown>;

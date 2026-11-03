@@ -11,7 +11,7 @@ Code: `src/utils/purge-form-submissions.ts` (logic), `config/cron-tasks.ts` (sch
 | Variable | Default | Meaning |
 |----------|---------|---------|
 | `FORM_RETENTION_DAYS` | `365` | **Placeholder. The owner must decide.** Invalid values fall back to 365. |
-| `FORM_RETENTION_DRY_RUN` | `true` | Deletes nothing while `true`. Only the literal `false` enables deletion; any other value (typo, empty) keeps dry run on. |
+| `FORM_RETENTION_DRY_RUN` | `true` | Deletes nothing while `true`. Only the word `false` (any letter case, surrounding spaces ignored) enables deletion; any other value (typo, empty) keeps dry run on. |
 
 Fixed in code: batches of 50, hard cap of 500 documents per content type per run (a backlog is
 cleared over several daily runs). Constants `DEFAULT_BATCH_SIZE` / `DEFAULT_MAX_PER_RUN`.
