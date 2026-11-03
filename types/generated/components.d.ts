@@ -296,7 +296,7 @@ export interface UtilsTest extends Struct.ComponentSchema {
 }
 
 declare module '@strapi/strapi' {
-  export module Public {
+  export namespace Public {
     export interface ComponentSchemas {
       'commons.about-section': CommonsAboutSection;
       'commons.form-section': CommonsFormSection;

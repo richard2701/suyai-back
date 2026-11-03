@@ -3,7 +3,10 @@ services:
     name: strapi
     env: node
     plan: starter
-    buildCommand: yarn install && yarn build
+    # Deterministic install: fail on lockfile drift (previously caused mixed @strapi/* versions).
+    # --ignore-scripts skips the unused better-sqlite3 native build (DB is postgres); sharp is
+    # rebuilt explicitly for @strapi/upload image processing.
+    buildCommand: yarn install --frozen-lockfile --ignore-scripts && npm rebuild sharp && yarn build
     startCommand: yarn start
     healthCheckPath: /_health
     autoDeploy: false
@@ -18,6 +21,9 @@ services:
         sync: false
       - key: CLOUDINARY_SECRET
         sync: false
+      # config/database.ts defaults to sqlite; better-sqlite3 is not built (--ignore-scripts).
+      - key: DATABASE_CLIENT
+        value: postgres
       - key: DATABASE_URL
         fromDatabase:
           name: strapi

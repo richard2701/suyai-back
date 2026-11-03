@@ -2,7 +2,7 @@ import formReservationTransfer from './api/form-reservation-transfer/graphql/for
 import formReservationTourExtension from './api/form-reservation-tour/graphql/form-reservation-tour';
 import formContact from './api/form-contact/graphql/form-contact';
 import { assertResendConfigured } from './utils/send-email';
-import { createForcePublishedDocumentMiddleware } from './utils/publication-guard';
+import { createForcePublishedDocumentMiddleware, draftAndPublishApiUids } from './utils/publication-guard';
 
 export default {
   register({ strapi }) {
@@ -45,6 +45,13 @@ export default {
     for (const uid of formUids) {
       shadowCRUD(uid).disableActions(['find', 'findOne', 'update', 'delete']);
       shadowCRUD(uid).field('emailSent').disableInput();
+    }
+
+    // Nested relation queries let a client `publishedAt` filter override the published-only
+    // default (see draftAndPublishApiUids), so remove the field from every D&P FiltersInput.
+    // The and/or/not operators reuse the same input type, so they lose it too.
+    for (const uid of draftAndPublishApiUids(strapi.contentTypes)) {
+      shadowCRUD(uid).field('publishedAt').disableFilters();
     }
 
     // Legacy single type with PII fields; unused by the frontend.
