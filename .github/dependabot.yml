@@ -27,6 +27,10 @@ updates:
       # graphql 17 breaks Strapi boot: @strapi/plugin-graphql requires graphql ^16.8.1 (see #87).
       - dependency-name: "graphql"
         update-types: ["version-update:semver-major"]
+      # TypeScript 7 removes moduleResolution=node10 (the tsconfig fails) and Strapi 5 tooling
+      # is built against TypeScript 5.x; revisit when Strapi documents TS 7 support (see #103).
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
