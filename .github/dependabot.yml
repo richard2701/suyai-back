@@ -24,6 +24,9 @@ updates:
       # Major Strapi upgrades are planned manually (see the core upgrade PR #64).
       - dependency-name: "@strapi/*"
         update-types: ["version-update:semver-major"]
+      # graphql 17 breaks Strapi boot: @strapi/plugin-graphql requires graphql ^16.8.1 (see #87).
+      - dependency-name: "graphql"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
