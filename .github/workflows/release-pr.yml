@@ -1,0 +1,77 @@
+name: Auto release PR (develop -> main)
+
+# On every push to develop, open a PR develop -> main (or refresh its body if
+# one is already open). The PR body is built here, so we do not depend on
+# pr-description.yml: PRs created with GITHUB_TOKEN do not trigger other
+# workflows, so that workflow would never fire for a PR opened by this one.
+on:
+  push:
+    branches: [develop]
+
+permissions:
+  contents: read
+
+# Never run two syncs at once; queue the newest instead of cancelling a
+# run that may be halfway through creating the PR.
+concurrency:
+  group: release-pr
+  cancel-in-progress: false
+
+jobs:
+  release-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # git log/diff only; nothing is pushed
+      pull-requests: write # create/edit the PR
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # full history so origin/main..origin/develop works
+
+      - name: Create or update release PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          git fetch --quiet origin main develop
+
+          # Nothing to release: skip (do not open an empty PR).
+          ahead="$(git rev-list --count origin/main..origin/develop)"
+          if [ "$ahead" -eq 0 ]; then
+            echo "develop has no commits ahead of main; nothing to do."
+            exit 0
+          fi
+
+          # Build the PR body in a file so commit text is never evaluated by the shell.
+          {
+            echo "## Release: develop -> main"
+            echo
+            echo "Automatically maintained on every push to \`develop\`."
+            echo
+            echo "### Commits ($ahead)"
+            git log origin/main..origin/develop --no-merges \
+              --pretty=format:'- %s (%h)'
+            echo
+            echo
+            echo "### Files changed"
+            # Cap the list so the body stays under GitHub's 65536 char limit.
+            git diff --stat=100 origin/main...origin/develop | head -n 100 | sed 's/^/    /'
+            echo
+            echo "---"
+            echo "<sub>Generated automatically by GitHub Actions.</sub>"
+          } > pr_body.md
+
+          existing="$(gh pr list --repo "$REPO" --base main --head develop \
+            --state open --json number --jq '.[0].number // empty')"
+
+          if [ -n "$existing" ]; then
+            echo "Open PR #$existing found; updating body."
+            gh pr edit "$existing" --repo "$REPO" --body-file pr_body.md
+          else
+            echo "No open PR; creating one."
+            gh pr create --repo "$REPO" --base main --head develop \
+              --title "Release: develop -> main" --body-file pr_body.md
+          fi
