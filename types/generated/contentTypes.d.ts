@@ -466,6 +466,10 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.RichText & Schema.Attribute.Required;
+    destinations: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::destination.destination'
+    >;
     duration: Schema.Attribute.String;
     form_reservation: Schema.Attribute.Component<'commons.form-section', false>;
     hero: Schema.Attribute.Component<'utils.hero', false>;
@@ -572,6 +576,8 @@ export interface ApiDestinationDestination extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     image: Schema.Attribute.Media<'images'>;
+    kind: Schema.Attribute.Enumeration<['tour_area', 'transfer_only']> &
+      Schema.Attribute.DefaultTo<'tour_area'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -585,6 +591,7 @@ export interface ApiDestinationDestination extends Struct.CollectionTypeSchema {
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
     slug: Schema.Attribute.UID<'name'>;
+    tours: Schema.Attribute.Relation<'manyToMany', 'api::article.article'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
