@@ -76,7 +76,11 @@ if ($prodUrl -match "@(localhost|127\.0\.0\.1)[:/]") {
 }
 
 # Version check (client must be >= server major version).
-$serverNum = [int](& $psql $prodUrl -At -c 'SHOW server_version_num' 2>&1)
+$versionOut = & $psql $prodUrl -At -c 'SHOW server_version_num' 2>&1
+if ($LASTEXITCODE -ne 0 -or "$versionOut" -notmatch '^\d+$') {
+  throw 'Could not connect to production. Check PROD_DATABASE_URL in .env.prod-db and that your IP is allowed in the Render database (Access Control).'
+}
+$serverNum = [int]"$versionOut"
 $serverMajor = [math]::Floor($serverNum / 10000)
 $clientMajor = [int](([regex]::Match((& $pgDump --version), '(\d+)(\.\d+)?\s*$')).Groups[1].Value)
 Write-Host "Production Postgres: $serverMajor | pg_dump client: $clientMajor"
