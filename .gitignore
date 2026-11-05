@@ -149,3 +149,6 @@ KICKOFF.md
 .claude/skills/
 .claude/agents/
 export_*.tar.gz
+
+# Production DB pull script
+.env.prod-db
