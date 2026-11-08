@@ -54,6 +54,9 @@ services:
         sync: false
       - key: SMTP_EMAIL_ADMIN
         sync: false
+      # Public URL of this API (e.g. https://api.transfersuyai.cl), used for redirects like "/" -> "/admin".
+      - key: PUBLIC_URL
+        sync: false
       # Comma-separated exact SPA origins, e.g. https://example.com,https://www.example.com
       - key: FRONTEND_URL
         sync: false
