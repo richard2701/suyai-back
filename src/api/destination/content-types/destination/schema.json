@@ -35,6 +35,20 @@
     },
     "order": {
       "type": "integer"
+    },
+    "kind": {
+      "type": "enumeration",
+      "enum": [
+        "tour_area",
+        "transfer_only"
+      ],
+      "default": "tour_area"
+    },
+    "tours": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::article.article",
+      "inversedBy": "destinations"
     }
   }
 }
