@@ -8,18 +8,25 @@ import { GraphQLError } from 'graphql';
 
 // Matches explicit schemes, `www.` and host-like tokens such as `evil.com` or `bit.ly/x`.
 const URL_PATTERN = /https?:|www\.|[\p{L}\d-]\.[a-z]{2,}\b/iu;
+// Looser rule for street addresses: plain dots between words ("Av.Alemania", "Sta.Maria",
+// "Pucon.cl") are legitimate, so only schemes, `www.` and scheme-less "host.tld/path" are blocked.
+const ADDRESS_URL_PATTERN = /https?:|www\.|[\p{L}\d-]\.[a-z]{2,}\//iu;
 const MARKUP_PATTERN = /[<>]/;
 const PHONE_PATTERN = /^[+\d\s()-]{6,20}$/;
 
 interface FieldRule {
   maxLength: number;
   noUrls?: boolean;
+  /** Overrides the default URL_PATTERN for this field. */
+  urlPattern?: RegExp;
   noMarkup?: boolean;
   pattern?: RegExp;
 }
 
 const PERSON_NAME: FieldRule = { maxLength: 60, noUrls: true, noMarkup: true };
 const CATALOG_TEXT: FieldRule = { maxLength: 120, noUrls: true, noMarkup: true };
+
+const ADDRESS_RULE: FieldRule = { maxLength: 300, noUrls: true, noMarkup: true, urlPattern: ADDRESS_URL_PATTERN };
 
 export const FORM_FIELD_RULES: Readonly<Record<string, FieldRule>> = {
   name: PERSON_NAME,
@@ -29,6 +36,10 @@ export const FORM_FIELD_RULES: Readonly<Record<string, FieldRule>> = {
   message: { maxLength: 2000 },
   tourName: CATALOG_TEXT,
   destination: CATALOG_TEXT,
+  // Echoed in the submitter email, so links and markup are rejected like other catalog text.
+  address: ADDRESS_RULE,
+  // Provider place ids are URL-safe tokens, e.g. `osm:N12345` or `curated:airport-zco`.
+  placeId: { maxLength: 255, pattern: /^[\w:.-]+$/ },
 };
 
 export interface FieldIssue {
@@ -51,12 +62,15 @@ export const sanitizeFormInput = <T extends Record<string, unknown>>(
     const value = raw.trim();
     (data as Record<string, unknown>)[field] = value;
 
-    const rule = FORM_FIELD_RULES[field];
+    // The front end mirrors `address` into `destination` (up to 300 chars); the BE truncates it to
+    // the column limit later, so it is validated with the address rule when an address is present.
+    const hasAddress = typeof input.address === 'string' && input.address.trim() !== '';
+    const rule = field === 'destination' && hasAddress ? ADDRESS_RULE : FORM_FIELD_RULES[field];
     if (!rule || value === '') continue;
 
     if (value.length > rule.maxLength) issues.push({ field, reason: 'too_long' });
     else if (rule.noMarkup && MARKUP_PATTERN.test(value)) issues.push({ field, reason: 'contains_markup' });
-    else if (rule.noUrls && URL_PATTERN.test(value)) issues.push({ field, reason: 'contains_url' });
+    else if (rule.noUrls && (rule.urlPattern ?? URL_PATTERN).test(value)) issues.push({ field, reason: 'contains_url' });
     else if (rule.pattern && !rule.pattern.test(value)) issues.push({ field, reason: 'invalid_format' });
   }
 

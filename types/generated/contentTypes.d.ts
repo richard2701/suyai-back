@@ -766,13 +766,22 @@ export interface ApiFormReservationTransferFormReservationTransfer
     draftAndPublish: true;
   };
   attributes: {
+    address: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 300;
+      }>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     destination: Schema.Attribute.String & Schema.Attribute.Required;
+    direction: Schema.Attribute.Enumeration<['from_airport', 'to_airport']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'from_airport'>;
     email: Schema.Attribute.Email & Schema.Attribute.Required;
     emailSent: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     lastname: Schema.Attribute.String & Schema.Attribute.Required;
+    lat: Schema.Attribute.Float;
+    lng: Schema.Attribute.Float;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -787,6 +796,7 @@ export interface ApiFormReservationTransferFormReservationTransfer
     people: Schema.Attribute.Integer & Schema.Attribute.Required;
     phone: Schema.Attribute.Text & Schema.Attribute.Required;
     pickupTime: Schema.Attribute.Time & Schema.Attribute.Required;
+    placeId: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     transferDate: Schema.Attribute.Date & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
