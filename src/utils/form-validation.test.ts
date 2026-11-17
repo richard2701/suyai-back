@@ -89,4 +89,47 @@ describe('form validation', () => {
       { field: 'phone', reason: 'invalid_format' },
     ]);
   });
+
+  describe('address and placeId', () => {
+    it.each(['Av.Alemania 0123, Temuco', 'Cabañas Pucon.cl, Pucón', 'Hostal Sta.Maria'])(
+      'accepts address %s',
+      (address) => {
+        expect(issueFor({ address })).toEqual([]);
+      }
+    );
+
+    it.each(['http://evil.com', 'www.evil.com', 'evil.com/path', 'bit.ly/abc'])(
+      'rejects URL-like address %s',
+      (address) => {
+        expect(issueFor({ address })).toEqual([{ field: 'address', reason: 'contains_url' }]);
+      }
+    );
+
+    it('rejects markup in address', () => {
+      expect(issueFor({ address: '<b>x</b>' })).toEqual([{ field: 'address', reason: 'contains_markup' }]);
+    });
+
+    it('keeps the stricter URL rule on other fields', () => {
+      expect(issueFor({ destination: 'Hostal Sta.Maria' })).toEqual([
+        { field: 'destination', reason: 'contains_url' },
+      ]);
+    });
+
+    it('validates destination like address (up to 300 chars) when an address is present', () => {
+      const address = 'Av.Alemania 0123, Temuco '.repeat(10).trim();
+      expect(issueFor({ address, destination: address })).toEqual([]);
+      expect(issueFor({ destination: 'a'.repeat(121) })).toEqual([{ field: 'destination', reason: 'too_long' }]);
+    });
+
+    it.each(['osm:N12345', 'curated:airport-zco', 'ChIJL68lBEHFYpYRMQkPQDzVdYQ', 'osm:W1.2'])(
+      'accepts placeId %s',
+      (placeId) => {
+        expect(issueFor({ placeId })).toEqual([]);
+      }
+    );
+
+    it.each(['osm N1', 'a/b', '<x>', 'a'.repeat(256)])('rejects placeId %s', (placeId) => {
+      expect(issueFor({ placeId })).toHaveLength(1);
+    });
+  });
 });

@@ -132,11 +132,87 @@ describe('createFormReservationTransfer resolver', () => {
     expect(create).not.toHaveBeenCalled();
   });
 
+  it('checks required fields before calling reCAPTCHA', async () => {
+    const { resolver } = buildResolver();
+    const { pickupTime, ...data } = validData;
+
+    await expect(resolver(null, { data }, {})).rejects.toThrow('El campo pickupTime es requerido.');
+    expect(validateRecaptcha).not.toHaveBeenCalled();
+  });
+
+  it('accepts a 250-char address mirrored into destination', async () => {
+    const { resolver, create } = buildResolver();
+    const address = 'Av.Alemania 0123, Temuco '.repeat(10).slice(0, 250).trim();
+
+    await resolver(null, { data: { ...validData, address, destination: address, placeId: 'osm:N12345' } }, {});
+
+    const passed = create.mock.calls[0][0].data;
+    expect(passed.destination).toBe(address);
+    expect(passed.placeId).toBe('osm:N12345');
+  });
+
   it('rejects malformed phone numbers', async () => {
     const { resolver, create } = buildResolver();
 
     await expect(
       resolver(null, { data: { ...validData, phone: 'call me http://x' } }, {})
+    ).rejects.toThrow('Invalid form input.');
+    expect(create).not.toHaveBeenCalled();
+  });
+
+  it('persists direction and structured address, deriving destination from address', async () => {
+    const { resolver, create } = buildResolver();
+    const { destination, ...legacyFree } = validData;
+    await resolver(
+      null,
+      {
+        data: {
+          ...legacyFree,
+          direction: 'to_airport',
+          address: '  Av. Providencia 123, Santiago  ',
+          placeId: 'ChIJL68lBEHFYpYRMQkPQDzVdYQ',
+          lat: -33.4263,
+          lng: -70.6201,
+        },
+      },
+      {}
+    );
+
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(create.mock.calls[0][0].data).toMatchObject({
+      direction: 'to_airport',
+      address: 'Av. Providencia 123, Santiago',
+      destination: 'Av. Providencia 123, Santiago',
+      placeId: 'ChIJL68lBEHFYpYRMQkPQDzVdYQ',
+      lat: -33.4263,
+      lng: -70.6201,
+    });
+  });
+
+  it('still accepts a legacy payload with only destination', async () => {
+    const { resolver, create } = buildResolver();
+    await resolver(null, { data: { ...validData } }, {});
+
+    const passed = create.mock.calls[0][0].data;
+    expect(passed.destination).toBe('Airport SCL');
+    expect('address' in passed).toBe(false);
+  });
+
+  it('rejects out-of-range coordinates before calling reCAPTCHA', async () => {
+    const { resolver, create } = buildResolver();
+
+    await expect(
+      resolver(null, { data: { ...validData, address: 'Las Condes', lat: 123 } }, {})
+    ).rejects.toMatchObject({ extensions: { code: 'BAD_USER_INPUT' } });
+    expect(validateRecaptcha).not.toHaveBeenCalled();
+    expect(create).not.toHaveBeenCalled();
+  });
+
+  it('rejects URLs in the address', async () => {
+    const { resolver, create } = buildResolver();
+
+    await expect(
+      resolver(null, { data: { ...validData, address: 'Go to http://evil.com now' } }, {})
     ).rejects.toThrow('Invalid form input.');
     expect(create).not.toHaveBeenCalled();
   });

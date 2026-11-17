@@ -17,6 +17,11 @@ export interface FormResolverConfig {
   required: readonly string[];
   /** reCAPTCHA action the frontend must use for this form. */
   recaptchaAction: string;
+  /**
+   * Optional form-specific step run after the generic validation and before the required-field check
+   * and reCAPTCHA. May normalize values (e.g. derive a legacy field) or throw a GraphQLError.
+   */
+  transform?: (data: Record<string, unknown>) => Record<string, unknown>;
 }
 
 // GraphQLError passes through plugin-graphql's formatError unchanged; a plain Error is masked
@@ -26,7 +31,7 @@ const userError = (message: string, code: string): GraphQLError =>
 
 /**
  * Builds the Strapi `register` hook for a public form mutation:
- * rate limit -> allowlist + validation -> reCAPTCHA -> required fields -> create.
+ * rate limit -> allowlist + validation -> transform -> required fields -> reCAPTCHA -> create.
  *
  * The entity is re-fetched after creation because the `afterCreate` lifecycle sends the emails
  * and flips `emailSent` after `create` resolves; returning the create result would always
@@ -55,20 +60,21 @@ export const createFormResolver = (config: FormResolverConfig) => ({
             resolve: async (_parent: unknown, args: { data: Record<string, unknown> }) => {
               const { data } = args;
               const recaptchaToken = data.recaptchaToken as string | undefined;
-              // Trim + length/URL/format checks before the billed reCAPTCHA call.
-              const formData = assertValidFormInput(pickFields(data, config.fields));
+              // Trim + length/URL/format checks before the billed reCAPTCHA call; required fields are checked first too.
+              const validData = assertValidFormInput(pickFields(data, config.fields));
+              const formData = config.transform ? config.transform(validData) : validData;
+
+              for (const field of config.required) {
+                if (!formData[field]) {
+                  throw userError(`El campo ${field} es requerido.`, 'BAD_USER_INPUT');
+                }
+              }
 
               if (!recaptchaToken) {
                 throw userError('reCAPTCHA token is required', 'RECAPTCHA_REQUIRED');
               }
               if (!(await validateRecaptcha(recaptchaToken, config.recaptchaAction))) {
                 throw userError('reCAPTCHA inválido.', 'RECAPTCHA_FAILED');
-              }
-
-              for (const field of config.required) {
-                if (!formData[field]) {
-                  throw userError(`El campo ${field} es requerido.`, 'BAD_USER_INPUT');
-                }
               }
 
               const created = await strapi.services[config.uid].create({ data: formData });
