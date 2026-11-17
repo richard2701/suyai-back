@@ -13,6 +13,18 @@
     },
     "url": {
       "type": "string"
+    },
+    "color": {
+      "type": "enumeration",
+      "enum": [
+        "primary",
+        "dark",
+        "ink",
+        "accent",
+        "white"
+      ],
+      "default": "primary",
+      "required": false
     }
   }
 }
