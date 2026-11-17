@@ -199,6 +199,10 @@ export interface UtilsButton extends Struct.ComponentSchema {
     displayName: 'Button';
   };
   attributes: {
+    color: Schema.Attribute.Enumeration<
+      ['primary', 'dark', 'ink', 'accent', 'white']
+    > &
+      Schema.Attribute.DefaultTo<'primary'>;
     text: Schema.Attribute.String;
     type: Schema.Attribute.String;
     url: Schema.Attribute.String;
