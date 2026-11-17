@@ -132,6 +132,25 @@ describe('createFormReservationTransfer resolver', () => {
     expect(create).not.toHaveBeenCalled();
   });
 
+  it('checks required fields before calling reCAPTCHA', async () => {
+    const { resolver } = buildResolver();
+    const { pickupTime, ...data } = validData;
+
+    await expect(resolver(null, { data }, {})).rejects.toThrow('El campo pickupTime es requerido.');
+    expect(validateRecaptcha).not.toHaveBeenCalled();
+  });
+
+  it('accepts a 250-char address mirrored into destination', async () => {
+    const { resolver, create } = buildResolver();
+    const address = 'Av.Alemania 0123, Temuco '.repeat(10).slice(0, 250).trim();
+
+    await resolver(null, { data: { ...validData, address, destination: address, placeId: 'osm:N12345' } }, {});
+
+    const passed = create.mock.calls[0][0].data;
+    expect(passed.destination).toBe(address);
+    expect(passed.placeId).toBe('osm:N12345');
+  });
+
   it('rejects malformed phone numbers', async () => {
     const { resolver, create } = buildResolver();
 
@@ -193,7 +212,7 @@ describe('createFormReservationTransfer resolver', () => {
     const { resolver, create } = buildResolver();
 
     await expect(
-      resolver(null, { data: { ...validData, address: 'Go to evil.com now' } }, {})
+      resolver(null, { data: { ...validData, address: 'Go to http://evil.com now' } }, {})
     ).rejects.toThrow('Invalid form input.');
     expect(create).not.toHaveBeenCalled();
   });

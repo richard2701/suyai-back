@@ -39,6 +39,11 @@ describe('fillDestinationFromAddress', () => {
     const address = 'a'.repeat(300);
     expect(fillDestinationFromAddress({ address }).destination).toHaveLength(255);
   });
+
+  it('truncates an over-long explicit destination instead of rejecting it', () => {
+    const address = 'a'.repeat(300);
+    expect(fillDestinationFromAddress({ address, destination: address }).destination).toHaveLength(255);
+  });
 });
 
 describe('assertValidCoordinates', () => {
@@ -46,6 +51,17 @@ describe('assertValidCoordinates', () => {
     expect(() => assertValidCoordinates({ lat: -33.3930, lng: -70.7858 })).not.toThrow();
     expect(() => assertValidCoordinates({})).not.toThrow();
     expect(() => assertValidCoordinates({ lat: null, lng: null })).not.toThrow();
+  });
+
+  it.each([
+    [{ lat: -33.39 }, 'lng'],
+    [{ lng: -70.78, lat: null }, 'lat'],
+  ])('rejects a lone coordinate %o', (data, field) => {
+    expect(() => assertValidCoordinates(data)).toThrow(
+      expect.objectContaining({
+        extensions: { code: 'BAD_USER_INPUT', fields: [{ field, reason: 'incomplete_pair' }] },
+      })
+    );
   });
 
   it.each([

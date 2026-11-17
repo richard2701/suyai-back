@@ -25,7 +25,13 @@ const isTransferDirection = (value: unknown): value is TransferDirection =>
  * admin views and the required-field check keep working. An explicit `destination` always wins.
  */
 export const fillDestinationFromAddress = <T extends Record<string, unknown>>(data: T): T => {
-  if (isNonEmptyString(data.destination) || !isNonEmptyString(data.address)) return data;
+  if (isNonEmptyString(data.destination)) {
+    // Truncate (never reject) so long mirrored addresses still fit the varchar(255) column.
+    return data.destination.length > DESTINATION_MAX_LENGTH
+      ? { ...data, destination: data.destination.slice(0, DESTINATION_MAX_LENGTH) }
+      : data;
+  }
+  if (!isNonEmptyString(data.address)) return data;
   return { ...data, destination: data.address.trim().slice(0, DESTINATION_MAX_LENGTH) };
 };
 
@@ -33,13 +39,18 @@ const isInRange = (value: unknown, limit: number): boolean =>
   typeof value === 'number' && Number.isFinite(value) && Math.abs(value) <= limit;
 
 /**
- * Rejects coordinates outside the valid WGS84 range. `lat` and `lng` are optional, but a
- * provided value must be a finite number within bounds (null/undefined are allowed).
+ * Rejects coordinates outside the valid WGS84 range or provided without their pair. `lat` and
+ * `lng` are optional together, but a provided value must be a finite number within bounds (null/undefined are allowed).
  */
 export const assertValidCoordinates = <T extends Record<string, unknown>>(data: T): T => {
-  const issues: { field: string; reason: 'out_of_range' }[] = [];
+  const issues: { field: string; reason: 'out_of_range' | 'incomplete_pair' }[] = [];
   if (data.lat != null && !isInRange(data.lat, 90)) issues.push({ field: 'lat', reason: 'out_of_range' });
   if (data.lng != null && !isInRange(data.lng, 180)) issues.push({ field: 'lng', reason: 'out_of_range' });
+
+  // Coordinates only make sense as a pair: require both or neither.
+  if (issues.length === 0 && (data.lat == null) !== (data.lng == null)) {
+    issues.push({ field: data.lat == null ? 'lat' : 'lng', reason: 'incomplete_pair' });
+  }
 
   if (issues.length > 0) {
     throw new GraphQLError('Invalid form input.', {
