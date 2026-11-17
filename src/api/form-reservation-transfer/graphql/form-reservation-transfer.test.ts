@@ -141,6 +141,63 @@ describe('createFormReservationTransfer resolver', () => {
     expect(create).not.toHaveBeenCalled();
   });
 
+  it('persists direction and structured address, deriving destination from address', async () => {
+    const { resolver, create } = buildResolver();
+    const { destination, ...legacyFree } = validData;
+    await resolver(
+      null,
+      {
+        data: {
+          ...legacyFree,
+          direction: 'to_airport',
+          address: '  Av. Providencia 123, Santiago  ',
+          placeId: 'ChIJL68lBEHFYpYRMQkPQDzVdYQ',
+          lat: -33.4263,
+          lng: -70.6201,
+        },
+      },
+      {}
+    );
+
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(create.mock.calls[0][0].data).toMatchObject({
+      direction: 'to_airport',
+      address: 'Av. Providencia 123, Santiago',
+      destination: 'Av. Providencia 123, Santiago',
+      placeId: 'ChIJL68lBEHFYpYRMQkPQDzVdYQ',
+      lat: -33.4263,
+      lng: -70.6201,
+    });
+  });
+
+  it('still accepts a legacy payload with only destination', async () => {
+    const { resolver, create } = buildResolver();
+    await resolver(null, { data: { ...validData } }, {});
+
+    const passed = create.mock.calls[0][0].data;
+    expect(passed.destination).toBe('Airport SCL');
+    expect('address' in passed).toBe(false);
+  });
+
+  it('rejects out-of-range coordinates before calling reCAPTCHA', async () => {
+    const { resolver, create } = buildResolver();
+
+    await expect(
+      resolver(null, { data: { ...validData, address: 'Las Condes', lat: 123 } }, {})
+    ).rejects.toMatchObject({ extensions: { code: 'BAD_USER_INPUT' } });
+    expect(validateRecaptcha).not.toHaveBeenCalled();
+    expect(create).not.toHaveBeenCalled();
+  });
+
+  it('rejects URLs in the address', async () => {
+    const { resolver, create } = buildResolver();
+
+    await expect(
+      resolver(null, { data: { ...validData, address: 'Go to evil.com now' } }, {})
+    ).rejects.toThrow('Invalid form input.');
+    expect(create).not.toHaveBeenCalled();
+  });
+
   it('trims values before persisting', async () => {
     const { resolver, create } = buildResolver();
     await resolver(null, { data: { ...validData, name: '  Ada  ' } }, {});

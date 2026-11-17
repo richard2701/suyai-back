@@ -29,6 +29,10 @@ export const FORM_FIELD_RULES: Readonly<Record<string, FieldRule>> = {
   message: { maxLength: 2000 },
   tourName: CATALOG_TEXT,
   destination: CATALOG_TEXT,
+  // Echoed in the submitter email, so links and markup are rejected like other catalog text.
+  address: { maxLength: 300, noUrls: true, noMarkup: true },
+  // Provider place ids (e.g. Google Places) are URL-safe tokens.
+  placeId: { maxLength: 255, pattern: /^[\w-]+$/ },
 };
 
 export interface FieldIssue {

@@ -49,6 +49,28 @@
     "pickupTime": {
       "type": "time",
       "required": true
+    },
+    "direction": {
+      "type": "enumeration",
+      "enum": [
+        "from_airport",
+        "to_airport"
+      ],
+      "required": true,
+      "default": "from_airport"
+    },
+    "address": {
+      "type": "text",
+      "maxLength": 300
+    },
+    "placeId": {
+      "type": "string"
+    },
+    "lat": {
+      "type": "float"
+    },
+    "lng": {
+      "type": "float"
     }
   }
 }
