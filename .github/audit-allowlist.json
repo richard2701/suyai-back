@@ -5,6 +5,12 @@
       "module": "zod",
       "reason": "No safe fix: forcing zod 4 breaks koa-session at load time (z.function().args is not a function). Reached via @strapi/core > koa-session > zod 3.25.76.",
       "issue": "https://github.com/richard2701/suyai-back/issues/78"
+    },
+    {
+      "id": 1247710,
+      "module": "picomatch",
+      "reason": "No patched version published (vulnerable <=4.0.7). Reached only through build and tooling glob matching (micromatch in @strapi/* and jscodeshift), never with visitor-controlled input.",
+      "issue": "https://github.com/richard2701/suyai-back/issues/137"
     }
   ]
 }
