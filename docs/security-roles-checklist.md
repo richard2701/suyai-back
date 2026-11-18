@@ -10,6 +10,8 @@ The site has no end-user accounts, so Public and Authenticated roles must stay l
   `form-reservation-transfer`, `form`, `feature-flag-token`, every `plugin::upload.*` action,
   and every users-permissions `role.*` action.
 - Revokes from **Public**: every users-permissions action (`user.*`, `auth.*`) except `auth.callback`.
+- Revokes from **Public**: `create`, `update` and `delete` on every `api::*` content-type, and
+  `plugin::email.email.send` (#97). Public is read-only on content.
 - Revokes from **Authenticated**: every users-permissions `user.*` action except `user.me`.
 - Sets users-permissions advanced setting `allow_register` to `false`, keeping the other advanced
   settings. If the `advanced` key is missing it logs a warning and does not write.
