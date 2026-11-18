@@ -46,6 +46,55 @@ logged and the other types still run.
   documented lookup by email across the three collections.
 - **Privacy page.** The FE privacy page must state the chosen period and stay in sync.
 
+## Dry run on a production copy (2026-11-18)
+
+Run locally against a scratch restore of `prod-2026-11-01.dump` (see `docs/backup-restore.md`),
+calling `purgeFormSubmissions` with `dryRun: true` and `now = 2026-11-18`. Counts are documents
+(a draft + published pair counts as one).
+
+| Retention | Cutoff | form-contact | form-reservation-tour | form-reservation-transfer |
+|-----------|--------|--------------|-----------------------|---------------------------|
+| total stored | | 2 | 0 | 8 |
+| 180 days | 2026-05-22 | 2 | 0 | 4 |
+| 365 days | 2025-11-18 | 1 | 0 | 3 |
+| 548 days | 2025-05-19 | 0 | 0 | 0 |
+| 730 days | 2024-11-18 | 0 | 0 | 0 |
+
+Oldest submission: 2025-07-20. The dump is from 2026-11-01, so production may hold a few newer
+rows; that only changes totals, not what is past a cutoff.
+
+## Per-person erasure request
+
+1. Admin panel > Content Manager > each of Form Contact, Form Reservation Tour, Form
+   Reservation Transfer > filter `email` equals the requester's address (also try `phone`).
+2. Delete every match (deleting the entry removes draft and published versions).
+3. Reply to the requester confirming deletion, and note that backups age out per
+   `docs/backup-restore.md` section 2. Log only the date and the number of records, not the email.
+
+## draftAndPublish removal rehearsal (#76, 2026-11-18)
+
+Done on a scratch copy of the production dump, booting Strapi with `draftAndPublish: false` on
+the three form types (not committed):
+
+- Strapi **deletes every draft row** on boot and keeps the published rows. Row counts went
+  contact 4 -> 2, transfer 16 -> 8; document counts unchanged (2 and 8).
+- Every real submission had an identical draft + published pair (GraphQL create publishes), so
+  no data was lost. Draft and published columns matched in 100% of pairs (incl. `email_sent`).
+- A synthetic **draft-only** document (no published version) was **deleted**. So before shipping
+  the change, run this read-only check on production and publish (or export) any hit first:
+
+```sql
+SELECT 'contact', count(*) FROM (SELECT document_id FROM form_contacts GROUP BY document_id HAVING count(published_at) = 0) x
+UNION ALL SELECT 'tour', count(*) FROM (SELECT document_id FROM form_reservation_tours GROUP BY document_id HAVING count(published_at) = 0) x
+UNION ALL SELECT 'transfer', count(*) FROM (SELECT document_id FROM form_reservation_transfers GROUP BY document_id HAVING count(published_at) = 0) x;
+```
+
+- The purge still works after the change: the dry run returned the same counts (`status:
+  'draft'` is ignored for types without draftAndPublish).
+- Rollback (verified on the scratch copy): re-enabling draftAndPublish makes Strapi recreate a draft copy of every published row (contact back to 4 rows, transfer to 16),
+  so turning it back on loses nothing; the deleted draft rows themselves only come back from a
+  backup. Take a dump right before deploying.
+
 ## Operational caveats
 
 - The job runs inside the web process. If the Render instance sleeps (free plan) the job does not
