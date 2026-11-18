@@ -4,7 +4,7 @@
   "info": {
     "singularName": "form-reservation-transfer",
     "pluralName": "form-reservation-transfers",
-    "displayName": "Form reservation transfer"
+    "displayName": "Reserva de transfer"
   },
   "options": {
     "draftAndPublish": true

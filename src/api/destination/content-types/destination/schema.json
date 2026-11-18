@@ -4,7 +4,7 @@
   "info": {
     "singularName": "destination",
     "pluralName": "destinations",
-    "displayName": "Destination",
+    "displayName": "Destino",
     "description": "Travel destinations shown in tiles and the search dropdown"
   },
   "options": {
