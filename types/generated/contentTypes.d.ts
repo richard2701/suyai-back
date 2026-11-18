@@ -1121,38 +1121,6 @@ export interface ApiTestimonialTestimonial extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiTourDetailTourDetail extends Struct.SingleTypeSchema {
-  collectionName: 'tour_details';
-  info: {
-    description: '';
-    displayName: 'Tour Detail';
-    pluralName: 'tour-details';
-    singularName: 'tour-detail';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    form_reservation: Schema.Attribute.Component<'commons.form-section', false>;
-    hero: Schema.Attribute.Component<'utils.hero', false>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::tour-detail.tour-detail'
-    > &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    seo: Schema.Attribute.Component<'shared.seo', false>;
-    title: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiTourTour extends Struct.SingleTypeSchema {
   collectionName: 'tours';
   info: {
@@ -1746,7 +1714,6 @@ declare module '@strapi/strapi' {
       'api::table-information.table-information': ApiTableInformationTableInformation;
       'api::term.term': ApiTermTerm;
       'api::testimonial.testimonial': ApiTestimonialTestimonial;
-      'api::tour-detail.tour-detail': ApiTourDetailTourDetail;
       'api::tour.tour': ApiTourTour;
       'api::transfer.transfer': ApiTransferTransfer;
       'plugin::content-releases.release': PluginContentReleasesRelease;
