@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import { readdirSync, readFileSync } from 'node:fs';
+import path from 'node:path';
 import { escapeHtml, renderTemplate } from './render-template';
 
 describe('escapeHtml', () => {
@@ -52,5 +54,18 @@ describe('renderTemplate', () => {
   it('renders nullish vars as empty strings', () => {
     const out = renderTemplate('[{{ message }}]', { message: null });
     expect(out).toBe('[]');
+  });
+});
+
+describe('email templates footer', () => {
+  const templatesDir = path.resolve(__dirname, '../../config/email/templates');
+  const templateFiles = readdirSync(templatesDir).filter((file) => file.endsWith('.html'));
+
+  it.each(templateFiles)('%s renders the copyright year exactly once', (file) => {
+    const template = readFileSync(path.join(templatesDir, file), 'utf8');
+    const out = renderTemplate(template, { copyYear: '2031' });
+    expect(out).toContain('&copy; 2031 Suyai Tours.');
+    // A hardcoded year next to the dynamic one would render "2031 2025".
+    expect(out).not.toMatch(/&copy;\s*\d{4}\s+\d{4}/);
   });
 });
