@@ -17,8 +17,8 @@ services:
     startCommand: yarn run start
     # Not configured in Render today. Recommended: healthCheckPath /_health (returns 204).
     #
-    # Recommended build command (not applied yet): fails on lockfile drift and skips the unused
-    # better-sqlite3 native build, rebuilding sharp for @strapi/upload image processing:
+    # Recommended build command (not applied yet): fails on lockfile drift and skips native
+    # install scripts, rebuilding sharp for @strapi/upload image processing:
     #   yarn install --frozen-lockfile --ignore-scripts && npm rebuild sharp && yarn build
     envVars:
       - key: NODE_VERSION
@@ -31,7 +31,7 @@ services:
         sync: false
       - key: CLOUDINARY_SECRET
         sync: false
-      # config/database.ts defaults to sqlite; better-sqlite3 is not built (--ignore-scripts).
+      # config/database.ts defaults to postgres; kept explicit here.
       - key: DATABASE_CLIENT
         value: postgres
       - key: DATABASE_URL

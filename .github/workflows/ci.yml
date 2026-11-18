@@ -30,7 +30,7 @@ jobs:
           node-version: 22
           cache: yarn
 
-      # --ignore-scripts skips native builds (better-sqlite3 is unused, the DB is Postgres).
+      # --ignore-scripts skips native install scripts; the DB is Postgres, nothing here needs them.
       - name: Install dependencies
         run: yarn install --frozen-lockfile --ignore-scripts
 
