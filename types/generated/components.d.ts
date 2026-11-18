@@ -289,16 +289,6 @@ export interface UtilsMenuButton extends Struct.ComponentSchema {
   };
 }
 
-export interface UtilsTest extends Struct.ComponentSchema {
-  collectionName: 'components_utils_tests';
-  info: {
-    displayName: 'test';
-  };
-  attributes: {
-    body2: Schema.Attribute.JSON;
-  };
-}
-
 declare module '@strapi/strapi' {
   export namespace Public {
     export interface ComponentSchemas {
@@ -321,7 +311,6 @@ declare module '@strapi/strapi' {
       'utils.icon-info': UtilsIconInfo;
       'utils.link': UtilsLink;
       'utils.menu-button': UtilsMenuButton;
-      'utils.test': UtilsTest;
     }
   }
 }
