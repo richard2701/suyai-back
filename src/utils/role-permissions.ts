@@ -26,6 +26,13 @@ const DENIED_FOR_ALL_ROLES: readonly string[] = [
 // Public has no reason to touch user records or any auth flow except login (`auth.callback`).
 const PUBLIC_ALLOWED_U_P_ACTIONS: readonly string[] = [`${U_P}auth.callback`];
 
+// Public is read-only on content: anonymous create/update/delete on any API content-type
+// (REST and the matching GraphQL mutations) would let anyone edit the site. Forms are not
+// affected because they use `auth: false` GraphQL mutations. `email.send` would turn the
+// email plugin into an open relay; forms send email server-side without it.
+const PUBLIC_DENIED_CONTENT_ACTIONS = /^api::[^.]+\.[^.]+\.(create|update|delete)$/;
+const PUBLIC_DENIED_ACTIONS: readonly string[] = ['plugin::email.email.send'];
+
 // Authenticated may only read its own profile; every other user action
 // (find, findOne, count, create, update, destroy) is denied.
 const AUTHENTICATED_ALLOWED_U_P_USER_ACTIONS: readonly string[] = [`${U_P}user.me`];
@@ -35,6 +42,7 @@ export const shouldRevokePermission = (roleType: string, action: string): boolea
   if (DENIED_FOR_ALL_ROLES.some((prefix) => action.startsWith(prefix))) return true;
 
   if (roleType === 'public') {
+    if (PUBLIC_DENIED_CONTENT_ACTIONS.test(action) || PUBLIC_DENIED_ACTIONS.includes(action)) return true;
     return action.startsWith(U_P) && !PUBLIC_ALLOWED_U_P_ACTIONS.includes(action);
   }
   return (

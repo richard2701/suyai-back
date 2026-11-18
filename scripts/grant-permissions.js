@@ -1,9 +1,9 @@
 'use strict';
 
-// One-off script to grant Public find/findOne on the new magic-banner and
-// testimonial content-types (suyai-back#48). Follows the same
-// setPublicPermissions pattern already used in scripts/seed.js. Safe to
-// re-run — skips permissions that already exist.
+// Grants Public find/findOne on every content-type the frontend reads
+// (suyai-back#48, extended in #97). Follows the same setPublicPermissions
+// pattern already used in scripts/seed.js. Safe to re-run: skips permissions
+// that already exist. Verify with scripts/smoke-public-content.mjs.
 
 async function setPublicPermissions(newPermissions) {
   const publicRole = await strapi.query('plugin::users-permissions.role').findOne({
@@ -36,9 +36,24 @@ async function main() {
 
   app.log.level = 'error';
 
+  // Read-only grants for every type villa-tour queries (suyai-back#97). Single types only
+  // have `find`. Never add write actions here: role-permissions.ts revokes them on boot.
   await setPublicPermissions({
+    home: ['find'],
+    transfer: ['find'],
+    tour: ['find'],
+    global: ['find'],
+    navbar: ['find'],
+    footer: ['find'],
+    term: ['find'],
+    privacy: ['find'],
     'magic-banner': ['find'],
+    article: ['find', 'findOne'],
+    category: ['find', 'findOne'],
+    author: ['find', 'findOne'],
+    destination: ['find', 'findOne'],
     testimonial: ['find', 'findOne'],
+    'table-information': ['find', 'findOne'],
   });
 
   await app.destroy();
