@@ -1,6 +1,7 @@
 import formReservationTransfer from './api/form-reservation-transfer/graphql/form-reservation-transfer';
 import formReservationTourExtension from './api/form-reservation-tour/graphql/form-reservation-tour';
 import formContact from './api/form-contact/graphql/form-contact';
+import homeGraphql from './api/home/graphql/home';
 import { assertResendConfigured } from './utils/send-email';
 import { createForcePublishedDocumentMiddleware, draftAndPublishApiUids } from './utils/publication-guard';
 import { enforceRolePermissions } from './utils/role-permissions';
@@ -26,6 +27,7 @@ export default {
     formReservationTransfer.register({ strapi });
     formReservationTourExtension.register({ strapi });
     formContact.register({ strapi });
+    homeGraphql.register({ strapi });
 
     const shadowCRUD = strapi.plugin('graphql').service('extension').shadowCRUD;
 
