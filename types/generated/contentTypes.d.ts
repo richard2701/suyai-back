@@ -447,7 +447,7 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
   collectionName: 'articles';
   info: {
     description: 'Create your blog content';
-    displayName: 'Article';
+    displayName: 'Tour (artículo)';
     pluralName: 'articles';
     singularName: 'article';
   };
@@ -500,7 +500,7 @@ export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
   collectionName: 'authors';
   info: {
     description: 'Create authors for your content';
-    displayName: 'Author';
+    displayName: 'Autor';
     pluralName: 'authors';
     singularName: 'author';
   };
@@ -532,7 +532,7 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   collectionName: 'categories';
   info: {
     description: 'Organize your content into categories';
-    displayName: 'Category';
+    displayName: 'Categoría';
     pluralName: 'categories';
     singularName: 'category';
   };
@@ -564,7 +564,7 @@ export interface ApiDestinationDestination extends Struct.CollectionTypeSchema {
   collectionName: 'destinations';
   info: {
     description: 'Travel destinations shown in tiles and the search dropdown';
-    displayName: 'Destination';
+    displayName: 'Destino';
     pluralName: 'destinations';
     singularName: 'destination';
   };
@@ -602,7 +602,7 @@ export interface ApiFeatureFlagTokenFeatureFlagToken
   extends Struct.CollectionTypeSchema {
   collectionName: 'feature_flag_tokens';
   info: {
-    displayName: 'Feature Flag Token';
+    displayName: 'Token de vista previa';
     pluralName: 'feature-flag-tokens';
     singularName: 'feature-flag-token';
   };
@@ -644,7 +644,7 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
   collectionName: 'footers';
   info: {
     description: '';
-    displayName: 'Footer';
+    displayName: 'Pie de página';
     pluralName: 'footers';
     singularName: 'footer';
   };
@@ -678,7 +678,7 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
 export interface ApiFormContactFormContact extends Struct.CollectionTypeSchema {
   collectionName: 'form_contacts';
   info: {
-    displayName: 'form contact';
+    displayName: 'Contacto';
     pluralName: 'form-contacts';
     singularName: 'form-contact';
   };
@@ -716,7 +716,7 @@ export interface ApiFormReservationTourFormReservationTour
   collectionName: 'form_reservation_tours';
   info: {
     description: '';
-    displayName: 'form reservation tour';
+    displayName: 'Reserva de tour';
     pluralName: 'form-reservation-tours';
     singularName: 'form-reservation-tour';
   };
@@ -758,7 +758,7 @@ export interface ApiFormReservationTransferFormReservationTransfer
   extends Struct.CollectionTypeSchema {
   collectionName: 'form_reservation_transfers';
   info: {
-    displayName: 'Form reservation transfer';
+    displayName: 'Reserva de transfer';
     pluralName: 'form-reservation-transfers';
     singularName: 'form-reservation-transfer';
   };
@@ -809,7 +809,7 @@ export interface ApiFormForm extends Struct.SingleTypeSchema {
   collectionName: 'forms';
   info: {
     description: '';
-    displayName: 'form_tour';
+    displayName: 'Formulario de tour';
     pluralName: 'forms';
     singularName: 'form';
   };
@@ -845,7 +845,7 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   collectionName: 'globals';
   info: {
     description: 'Define global settings';
-    displayName: 'Global';
+    displayName: 'Configuración global';
     pluralName: 'globals';
     singularName: 'global';
   };
@@ -880,7 +880,7 @@ export interface ApiHomeHome extends Struct.SingleTypeSchema {
   collectionName: 'homes';
   info: {
     description: 'Home single type. DEPRECATED fields (suyai-back#25, kept until FE migration then removed): `cards` -> replaced by the `destinations` relation; `contactForm` -> replaced by the `footer` single type contact fields consumed by the FE contact section (villa-tour#59); `footer` component -> redundant with the `footer` single type.';
-    displayName: 'Home';
+    displayName: 'Inicio';
     pluralName: 'homes';
     singularName: 'home';
   };
@@ -928,7 +928,7 @@ export interface ApiMagicBannerMagicBanner extends Struct.SingleTypeSchema {
   collectionName: 'magic_banners';
   info: {
     description: 'Home page promo banner ("Conoce la magia del sur")';
-    displayName: 'MagicBanner';
+    displayName: 'Banner destacado';
     pluralName: 'magic-banners';
     singularName: 'magic-banner';
   };
@@ -962,7 +962,7 @@ export interface ApiNavbarNavbar extends Struct.SingleTypeSchema {
   collectionName: 'navbars';
   info: {
     description: '';
-    displayName: 'Navbar';
+    displayName: 'Barra de navegación';
     pluralName: 'navbars';
     singularName: 'navbar';
   };
@@ -994,7 +994,7 @@ export interface ApiPrivacyPrivacy extends Struct.SingleTypeSchema {
   collectionName: 'privacies';
   info: {
     description: '';
-    displayName: 'Privacy';
+    displayName: 'Política de privacidad';
     pluralName: 'privacies';
     singularName: 'privacy';
   };
@@ -1028,7 +1028,7 @@ export interface ApiTableInformationTableInformation
   collectionName: 'table_informations';
   info: {
     description: '';
-    displayName: 'Table Information';
+    displayName: 'Tabla de información';
     pluralName: 'table-informations';
     singularName: 'table-information';
   };
@@ -1059,7 +1059,7 @@ export interface ApiTermTerm extends Struct.SingleTypeSchema {
   collectionName: 'terms';
   info: {
     description: '';
-    displayName: 'Term';
+    displayName: 'Términos y condiciones';
     pluralName: 'terms';
     singularName: 'term';
   };
@@ -1090,7 +1090,7 @@ export interface ApiTestimonialTestimonial extends Struct.CollectionTypeSchema {
   collectionName: 'testimonials';
   info: {
     description: 'Customer reviews shown on the Home page';
-    displayName: 'Testimonial';
+    displayName: 'Testimonio';
     pluralName: 'testimonials';
     singularName: 'testimonial';
   };
@@ -1125,7 +1125,7 @@ export interface ApiTourTour extends Struct.SingleTypeSchema {
   collectionName: 'tours';
   info: {
     description: '';
-    displayName: 'Tour';
+    displayName: 'Página de tours';
     pluralName: 'tours';
     singularName: 'tour';
   };
@@ -1153,7 +1153,7 @@ export interface ApiTransferTransfer extends Struct.SingleTypeSchema {
   collectionName: 'transfers';
   info: {
     description: '';
-    displayName: 'Transfer';
+    displayName: 'Página de transfer';
     pluralName: 'transfers';
     singularName: 'transfer';
   };

@@ -4,7 +4,7 @@
   "info": {
     "singularName": "feature-flag-token",
     "pluralName": "feature-flag-tokens",
-    "displayName": "Feature Flag Token"
+    "displayName": "Token de vista previa"
   },
   "options": {
     "draftAndPublish": false

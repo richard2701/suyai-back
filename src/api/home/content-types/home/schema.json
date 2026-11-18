@@ -4,7 +4,7 @@
   "info": {
     "singularName": "home",
     "pluralName": "homes",
-    "displayName": "Home",
+    "displayName": "Inicio",
     "description": "Home single type. DEPRECATED fields (suyai-back#25, kept until FE migration then removed): `cards` -> replaced by the `destinations` relation; `contactForm` -> replaced by the `footer` single type contact fields consumed by the FE contact section (villa-tour#59); `footer` component -> redundant with the `footer` single type."
   },
   "options": {
